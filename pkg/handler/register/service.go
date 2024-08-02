@@ -1,7 +1,7 @@
 package register
 
 import (
-	"Uber_Food_Delivery/internal/handler"
+	"Uber_Food_Delivery/pkg/handler"
 	"github.com/gin-gonic/gin"
 )
 

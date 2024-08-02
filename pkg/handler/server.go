@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"Uber_Food_Delivery/internal/database"
+	"Uber_Food_Delivery/pkg/database"
 	"github.com/gin-gonic/gin"
 )
 

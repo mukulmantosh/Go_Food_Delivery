@@ -1,9 +1,9 @@
 package main
 
 import (
-	"Uber_Food_Delivery/internal/database"
-	"Uber_Food_Delivery/internal/handler"
-	registration "Uber_Food_Delivery/internal/handler/register"
+	"Uber_Food_Delivery/pkg/database"
+	"Uber_Food_Delivery/pkg/handler"
+	registration "Uber_Food_Delivery/pkg/handler/register"
 	"log"
 )
 
