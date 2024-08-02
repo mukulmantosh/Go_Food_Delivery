@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/uptrace/bun"
-	"time"
 )
 
 type UserService struct {
@@ -18,9 +17,6 @@ func NewUserService(db database.Database) *UserService {
 }
 
 func (userService *UserService) Add(ctx context.Context, user *user.User) (bool, error) {
-	time.Sleep(10 * time.Second) // This simulates a long processing delay
-
-	// Perform the actual database operation
 	userInfo, err := userService.db.NewInsert().Model(user).Exec(ctx)
 	fmt.Println(userInfo, err)
 	return true, err
