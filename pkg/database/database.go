@@ -1,9 +1,13 @@
 package database
 
 import (
+	"Uber_Food_Delivery/pkg/database/models/user"
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 	"log"
 	"log/slog"
 	"os"
@@ -12,15 +16,21 @@ import (
 )
 
 type Database interface {
+	Db() *bun.DB
+	Migrate() error
 	HealthCheck() bool
 	Close() error
 }
 
 type DB struct {
-	db *sql.DB
+	db *bun.DB
 }
 
-func (d DB) HealthCheck() bool {
+func (d *DB) Db() *bun.DB {
+	return d.db
+}
+
+func (d *DB) HealthCheck() bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 
@@ -32,7 +42,7 @@ func (d DB) HealthCheck() bool {
 	return true
 }
 
-func (d DB) Close() error {
+func (d *DB) Close() error {
 	slog.Info("DB::Closing database connection")
 	return d.db.Close()
 }
@@ -48,14 +58,22 @@ func New() Database {
 		log.Fatal("Invalid DB Port")
 	}
 
-	connectionString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s",
-		dbHost, dbUsername, dbPassword, dbName, databasePort, "disable")
-
-	db, err := sql.Open("postgres", connectionString)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", dbUsername, dbPassword, dbHost, databasePort, dbName)
+	database := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	db := bun.NewDB(database, pgdialect.New())
 	return &DB{db: db}
 
+}
+
+func (d *DB) Migrate() error {
+	models := []interface{}{
+		(*user.User)(nil),
+	}
+
+	for _, model := range models {
+		if err := d.db.ResetModel(context.Background(), model); err != nil {
+			return err
+		}
+	}
+	return nil
 }

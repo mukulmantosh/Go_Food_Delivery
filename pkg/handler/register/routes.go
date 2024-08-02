@@ -10,6 +10,6 @@ func (s *Register) registerGroup() *gin.RouterGroup {
 }
 
 func (s *Register) routes() http.Handler {
-	s.router.GET("/user", s.addUser)
+	s.router.POST("/user", s.addUser)
 	return s.registerServe.Gin()
 }

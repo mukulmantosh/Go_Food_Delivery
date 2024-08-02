@@ -10,6 +10,10 @@ type Server struct {
 	db  database.Database
 }
 
+func (server *Server) Engine() database.Database {
+	return server.db
+}
+
 func (server *Server) Gin() *gin.Engine {
 	return server.gin
 }
