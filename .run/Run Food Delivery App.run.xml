@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Food Delivery App" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="Uber_Food_Delivery" />
+    <working_directory value="$PROJECT_DIR$" />
+    <kind value="PACKAGE" />
+    <package value="Uber_Food_Delivery/cmd/api" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/cmd/api/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
