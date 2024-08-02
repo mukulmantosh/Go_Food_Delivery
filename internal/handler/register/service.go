@@ -1,17 +1,17 @@
 package register
 
 import (
-	"Uber_Food_Delivery/internal/server"
+	"Uber_Food_Delivery/internal/handler"
 	"github.com/gin-gonic/gin"
 )
 
 type Register struct {
-	registerServe *server.Server
+	registerServe *handler.Server
 	group         string
 	router        *gin.RouterGroup
 }
 
-func NewRegister(s *server.Server, groupName string) *Register {
+func NewRegister(s *handler.Server, groupName string) *Register {
 
 	registrationService := &Register{
 		s,

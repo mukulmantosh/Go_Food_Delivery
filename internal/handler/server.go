@@ -1,4 +1,4 @@
-package server
+package handler
 
 import (
 	"Uber_Food_Delivery/internal/database"
