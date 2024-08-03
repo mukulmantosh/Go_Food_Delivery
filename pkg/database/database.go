@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/dialect/sqlitedialect"
 	"github.com/uptrace/bun/driver/pgdriver"
+	"github.com/uptrace/bun/driver/sqliteshim"
 	"log"
 	"log/slog"
 	"os"
@@ -63,6 +65,16 @@ func New() Database {
 	db := bun.NewDB(database, pgdialect.New())
 	return &DB{db: db}
 
+}
+
+// NewTestDB creates a new in-memory test database.
+func NewTestDB() Database {
+	database, err := sql.Open(sqliteshim.ShimName, "file::memory:?cache=shared")
+	if err != nil {
+		panic(err)
+	}
+	db := bun.NewDB(database, sqlitedialect.New())
+	return &DB{db}
 }
 
 func (d *DB) Migrate() error {

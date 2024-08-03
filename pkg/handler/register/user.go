@@ -26,6 +26,6 @@ func (s *Register) addUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Request completed successfully"})
+	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
 
 }
