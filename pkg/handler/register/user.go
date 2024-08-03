@@ -4,7 +4,6 @@ import (
 	user_model "Uber_Food_Delivery/pkg/database/models/user"
 	database "Uber_Food_Delivery/pkg/service/user"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -23,8 +22,7 @@ func (s *Register) addUser(c *gin.Context) {
 	userService := database.NewUserService(s.registerServe.Engine())
 	_, err := userService.Add(ctx, &user)
 	if err != nil {
-		fmt.Println(err)
-		c.JSON(http.StatusRequestTimeout, gin.H{"error": "Request timed out"})
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 

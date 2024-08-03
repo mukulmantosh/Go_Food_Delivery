@@ -66,12 +66,14 @@ func New() Database {
 }
 
 func (d *DB) Migrate() error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	models := []interface{}{
 		(*user.User)(nil),
 	}
 
 	for _, model := range models {
-		if err := d.db.ResetModel(context.Background(), model); err != nil {
+		if _, err := d.db.NewCreateTable().Model(model).IfNotExists().Exec(ctx); err != nil {
 			return err
 		}
 	}
