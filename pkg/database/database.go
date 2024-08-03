@@ -1,7 +1,7 @@
 package database
 
 import (
-	"Uber_Food_Delivery/pkg/database/models/user"
+	"Go_Food_Delivery/pkg/database/models/user"
 	"context"
 	"database/sql"
 	"fmt"

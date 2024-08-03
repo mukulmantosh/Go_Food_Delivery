@@ -1,8 +1,8 @@
 package register
 
 import (
-	user_model "Uber_Food_Delivery/pkg/database/models/user"
-	database "Uber_Food_Delivery/pkg/service/user"
+	userModel "Go_Food_Delivery/pkg/database/models/user"
+	database "Go_Food_Delivery/pkg/service/user"
 	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,7 +13,7 @@ func (s *Register) addUser(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 
-	var user user_model.User
+	var user userModel.User
 	if err := c.BindJSON(&user); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return

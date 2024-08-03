@@ -1,4 +1,4 @@
-module Uber_Food_Delivery
+module Go_Food_Delivery
 
 go 1.22
 

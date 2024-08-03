@@ -1,9 +1,9 @@
 package main
 
 import (
-	"Uber_Food_Delivery/pkg/database"
-	"Uber_Food_Delivery/pkg/handler"
-	registration "Uber_Food_Delivery/pkg/handler/register"
+	"Go_Food_Delivery/pkg/database"
+	"Go_Food_Delivery/pkg/handler"
+	registration "Go_Food_Delivery/pkg/handler/register"
 	"github.com/joho/godotenv"
 	"log"
 )

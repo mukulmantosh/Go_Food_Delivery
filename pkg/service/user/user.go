@@ -1,8 +1,8 @@
 package database
 
 import (
-	"Uber_Food_Delivery/pkg/database"
-	"Uber_Food_Delivery/pkg/database/models/user"
+	"Go_Food_Delivery/pkg/database"
+	"Go_Food_Delivery/pkg/database/models/user"
 	"context"
 	"errors"
 	"github.com/uptrace/bun"
