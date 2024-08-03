@@ -5,7 +5,6 @@ import (
 	registration "Uber_Food_Delivery/pkg/handler/register"
 	"Uber_Food_Delivery/pkg/tests"
 	"encoding/json"
-	"fmt"
 	"github.com/go-faker/faker/v4"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -38,7 +37,6 @@ func TestAddUser(t *testing.T) {
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 		testServer.Gin().ServeHTTP(w, req)
-		fmt.Println(w.Body.String())
 		assert.Equal(t, http.StatusCreated, w.Code)
 
 		tests.Teardown(testDB)
