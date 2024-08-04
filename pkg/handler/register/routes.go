@@ -11,5 +11,6 @@ func (s *Register) registerGroup() *gin.RouterGroup {
 
 func (s *Register) routes() http.Handler {
 	s.router.POST("/user", s.addUser)
+	s.router.DELETE("/user/:id", s.deleteUser)
 	return s.registerServe.Gin()
 }

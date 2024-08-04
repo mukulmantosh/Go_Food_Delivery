@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -27,5 +28,25 @@ func (s *Register) addUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
+
+}
+
+func (s *Register) deleteUser(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	userId := c.Param("id")
+
+	// Convert to integer
+	userID, err := strconv.ParseInt(userId, 10, 64)
+
+	userService := database.NewUserService(s.registerServe.Engine())
+	_, err = userService.Delete(ctx, userID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 
 }
