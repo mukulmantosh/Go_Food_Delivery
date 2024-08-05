@@ -1,7 +1,7 @@
 package database
 
 import (
-	"Uber_Food_Delivery/pkg/database"
+	"Go_Food_Delivery/pkg/database"
 	"context"
 	"log"
 	"os"

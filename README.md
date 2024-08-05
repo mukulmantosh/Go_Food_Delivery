@@ -1,7 +1,7 @@
 # Go Food Delivery
 
 ![Coverage](https://img.shields.io/badge/Coverage-71.6%25-brightgreen)
-![Workflow](https://github.com/mukulmantosh/Uber_Food_Delivery/actions/workflows/test.yaml/badge.svg)
+![Workflow](https://github.com/mukulmantosh/Go_Food_Delivery/actions/workflows/test.yaml/badge.svg)
 
 
 ![background](./misc/images/background.png)

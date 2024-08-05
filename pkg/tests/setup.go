@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"Uber_Food_Delivery/pkg/database"
+	"Go_Food_Delivery/pkg/database"
 	"log"
 	"log/slog"
 )

@@ -1,9 +1,9 @@
 package user
 
 import (
-	"Uber_Food_Delivery/pkg/handler"
-	registration "Uber_Food_Delivery/pkg/handler/register"
-	"Uber_Food_Delivery/pkg/tests"
+	"Go_Food_Delivery/pkg/handler"
+	registration "Go_Food_Delivery/pkg/handler/register"
+	"Go_Food_Delivery/pkg/tests"
 	"encoding/json"
 	"github.com/go-faker/faker/v4"
 	"github.com/stretchr/testify/assert"
