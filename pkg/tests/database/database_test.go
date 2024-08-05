@@ -49,6 +49,10 @@ func setup() {
 	_ = os.Setenv("DB_NAME", dbName)
 	_ = os.Setenv("DB_PORT", dbPort)
 	_ = os.Setenv("DB_HOST", dbHost)
+	_ = os.Setenv("STORAGE_TYPE", "local")
+	_ = os.Setenv("STORAGE_DIRECTORY", "uploads")
+	_ = os.Setenv("LOCAL_STORAGE_PATH", "./tmp")
+
 }
 
 // Teardown function to terminate the container
