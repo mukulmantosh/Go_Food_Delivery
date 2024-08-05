@@ -1,6 +1,7 @@
 package database
 
 import (
+	"Go_Food_Delivery/pkg/database/models/restaurant"
 	"Go_Food_Delivery/pkg/database/models/user"
 	"context"
 	"database/sql"
@@ -82,6 +83,7 @@ func (d *DB) Migrate() error {
 	defer cancel()
 	models := []interface{}{
 		(*user.User)(nil),
+		(*restaurant.Restaurant)(nil),
 	}
 
 	for _, model := range models {

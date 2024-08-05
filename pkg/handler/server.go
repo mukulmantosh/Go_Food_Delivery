@@ -19,8 +19,11 @@ func (server *Server) Gin() *gin.Engine {
 }
 
 func NewServer(db database.Database) *Server {
+	ginEngine := gin.Default()
+	ginEngine.MaxMultipartMemory = 8 << 20 // 8 MB
+
 	return &Server{
-		gin: gin.Default(),
+		gin: ginEngine,
 		db:  db,
 	}
 }

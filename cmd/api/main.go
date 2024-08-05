@@ -4,6 +4,7 @@ import (
 	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/handler"
 	registration "Go_Food_Delivery/pkg/handler/register"
+	"Go_Food_Delivery/pkg/handler/restaurant"
 	"github.com/joho/godotenv"
 	"log"
 )
@@ -24,6 +25,7 @@ func main() {
 	s := handler.NewServer(db)
 
 	registration.NewRegister(s, "/register")
+	restaurant.NewRestaurant(s, "/restaurant")
 
 	log.Fatal(s.Run())
 
