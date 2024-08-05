@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -14,9 +15,24 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 	defer cancel()
 	_ = ctx
 
-	file, _ := c.FormFile("file")
-	log.Println(file.Filename)
-	fmt.Printf("%T", file)
+	file, fileHeader, err := c.Request.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "File is required"})
+		return
+	}
+
+	originalFileName := fileHeader.Filename
+
+	// Generate a new file name
+	newFileName := generateFileName(originalFileName)
+
+	_, err = s.registerServe.Storage().Upload(newFileName, file)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+
+	uploadedFile := filepath.Join(os.Getenv("STORAGE_DIRECTORY"), newFileName)
+	fmt.Println("UPLOAD", uploadedFile)
 
 	// Upload the file to specific dst.
 	//.SaveUploadedFile(file, dst)
