@@ -38,10 +38,10 @@ func (s *Register) deleteUser(c *gin.Context) {
 	userId := c.Param("id")
 
 	// Convert to integer
-	userID, err := strconv.ParseInt(userId, 10, 64)
+	userID, _ := strconv.ParseInt(userId, 10, 64)
 
 	userService := database.NewUserService(s.registerServe.Engine())
-	_, err = userService.Delete(ctx, userID)
+	_, err := userService.Delete(ctx, userID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

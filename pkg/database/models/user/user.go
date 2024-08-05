@@ -21,5 +21,4 @@ func (u *User) HashPassword() {
 	}
 	passwordHash := utils.Hash(u.Password, salt)
 	u.Password = passwordHash
-	return
 }

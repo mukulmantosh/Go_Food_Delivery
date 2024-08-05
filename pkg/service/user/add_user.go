@@ -7,12 +7,12 @@ import (
 )
 
 func (usrSrv *UsrService) Add(ctx context.Context, user *user.User) (bool, error) {
-	accountExists, err := usrSrv.accountExists(ctx, user.Email)
+	accountExists, _ := usrSrv.accountExists(ctx, user.Email)
 	if accountExists {
 		return false, errors.New("the user you are trying to register already exists")
 	} else {
 		user.HashPassword() //encrypt password
-		_, err = usrSrv.db.NewInsert().Model(user).Exec(ctx)
+		_, err := usrSrv.db.NewInsert().Model(user).Exec(ctx)
 		if err != nil {
 			return false, err
 		}
