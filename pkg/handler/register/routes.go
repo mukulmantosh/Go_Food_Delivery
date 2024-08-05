@@ -6,11 +6,11 @@ import (
 )
 
 func (s *Register) registerGroup() *gin.RouterGroup {
-	return s.registerServe.Gin().Group(s.group)
+	return s.Serve.Gin().Group(s.group)
 }
 
 func (s *Register) routes() http.Handler {
 	s.router.POST("/user", s.addUser)
 	s.router.DELETE("/user/:id", s.deleteUser)
-	return s.registerServe.Gin()
+	return s.Serve.Gin()
 }

@@ -6,9 +6,9 @@ import (
 )
 
 type Register struct {
-	registerServe *handler.Server
-	group         string
-	router        *gin.RouterGroup
+	Serve  *handler.Server
+	group  string
+	router *gin.RouterGroup
 }
 
 func NewRegister(s *handler.Server, groupName string) *Register {

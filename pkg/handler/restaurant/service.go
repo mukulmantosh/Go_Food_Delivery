@@ -6,9 +6,9 @@ import (
 )
 
 type Restaurant struct {
-	registerServe *handler.Server
-	group         string
-	router        *gin.RouterGroup
+	Serve  *handler.Server
+	group  string
+	router *gin.RouterGroup
 }
 
 func NewRestaurant(s *handler.Server, groupName string) *Restaurant {

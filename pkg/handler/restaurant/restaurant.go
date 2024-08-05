@@ -1,6 +1,8 @@
 package restaurant
 
 import (
+	restaurantModel "Go_Food_Delivery/pkg/database/models/restaurant"
+	restro "Go_Food_Delivery/pkg/service/restaurant"
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -26,7 +28,7 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 	// Generate a new file name
 	newFileName := generateFileName(originalFileName)
 
-	_, err = s.registerServe.Storage().Upload(newFileName, file)
+	_, err = s.Serve.Storage().Upload(newFileName, file)
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
@@ -34,16 +36,14 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 	uploadedFile := filepath.Join(os.Getenv("STORAGE_DIRECTORY"), newFileName)
 	fmt.Println("UPLOAD", uploadedFile)
 
-	// Upload the file to specific dst.
-	//.SaveUploadedFile(file, dst)
+	var restaurant restaurantModel.Restaurant
+	if err := c.BindJSON(&restaurant); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
 
-	//var user userModel.User
-	//if err := c.BindJSON(&user); err != nil {
-	//	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
-	//	return
-	//}
-	//
-	//userService := database.NewUserService(s.registerServe.Engine())
+	//restaurantService := database.NewUserService(s.registerServe.Engine())
+	restroService := restro.NewRestaurantService(s.Serve.Engine())
 	//_, err := userService.Add(ctx, &user)
 	//if err != nil {
 	//	c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
