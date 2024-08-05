@@ -1,6 +1,10 @@
 package user
 
-import "github.com/uptrace/bun"
+import (
+	"Go_Food_Delivery/pkg/database/models/user/utils"
+	"github.com/uptrace/bun"
+	"log"
+)
 
 type User struct {
 	bun.BaseModel `bun:"table:users"`
@@ -8,4 +12,14 @@ type User struct {
 	Name          string `bun:",notnull" json:"name"`
 	Email         string `bun:",unique,notnull" json:"email"`
 	Password      string `bun:",notnull" json:"password"`
+}
+
+func (u *User) HashPassword() {
+	salt, err := utils.GenerateSalt()
+	if err != nil {
+		log.Fatal(err)
+	}
+	passwordHash := utils.Hash(u.Password, salt)
+	u.Password = passwordHash
+	return
 }
