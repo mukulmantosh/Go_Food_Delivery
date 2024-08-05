@@ -3,7 +3,6 @@ package handler
 import (
 	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/storage"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"os"
 )
@@ -32,7 +31,6 @@ func NewServer(db database.Database) *Server {
 
 	localStoragePath := os.Getenv("LOCAL_STORAGE_PATH")
 	if len(localStoragePath) > 0 {
-		fmt.Println("CAME HERE>..........")
 		// Set static path
 		ginEngine.Static(os.Getenv("STORAGE_DIRECTORY"), localStoragePath)
 	}

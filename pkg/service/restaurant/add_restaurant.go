@@ -5,6 +5,10 @@ import (
 	"context"
 )
 
-func (restSrv *RestaurantService) Add(ctx context.Context, user *restaurant.Restaurant) (bool, error) {
-	return false, nil
+func (restSrv *RestaurantService) Add(ctx context.Context, restaurant *restaurant.Restaurant) (bool, error) {
+	_, err := restSrv.db.NewInsert().Model(restaurant).Exec(ctx)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

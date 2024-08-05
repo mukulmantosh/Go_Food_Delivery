@@ -37,19 +37,18 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 	fmt.Println("UPLOAD", uploadedFile)
 
 	var restaurant restaurantModel.Restaurant
-	if err := c.BindJSON(&restaurant); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+	restaurant.Name = c.PostForm("name")
+	restaurant.Description = c.PostForm("description")
+	restaurant.Address = c.PostForm("address")
+	restaurant.City = c.PostForm("city")
+	restaurant.State = c.PostForm("state")
+	restaurant.Photo = uploadedFile
+
+	restroService := restro.NewRestaurantService(s.Serve.Engine())
+	_, err = restroService.Add(ctx, &restaurant)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
-
-	//restaurantService := database.NewUserService(s.registerServe.Engine())
-	restroService := restro.NewRestaurantService(s.Serve.Engine())
-	//_, err := userService.Add(ctx, &user)
-	//if err != nil {
-	//	c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
-	//	return
-	//}
-
 	c.JSON(http.StatusCreated, gin.H{"message": "Restaurant created successfully"})
-
 }
