@@ -11,5 +11,6 @@ func (s *Restaurant) registerGroup() *gin.RouterGroup {
 
 func (s *Restaurant) routes() http.Handler {
 	s.router.POST("/", s.addRestaurant)
+	s.router.GET("/", s.ListRestaurants)
 	return s.Serve.Gin()
 }

@@ -34,7 +34,6 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 	}
 
 	uploadedFile := filepath.Join(os.Getenv("STORAGE_DIRECTORY"), newFileName)
-	fmt.Println("UPLOAD", uploadedFile)
 
 	var restaurant restaurantModel.Restaurant
 	restaurant.Name = c.PostForm("name")
@@ -51,4 +50,17 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"message": "Restaurant created successfully"})
+}
+
+func (s *Restaurant) ListRestaurants(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	restroService := restro.NewRestaurantService(s.Serve.Engine())
+	results, err := restroService.ListRestaurants(ctx)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, results)
 }

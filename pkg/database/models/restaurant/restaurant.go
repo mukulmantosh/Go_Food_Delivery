@@ -15,7 +15,7 @@ type Restaurant struct {
 	City          string `bun:"city,notnull" json:"city"`
 	State         string `bun:"state,notnull" json:"state"`
 	utils.Timestamp
-	MenuItems []MenuItem `bun:"rel:has-many,join:restaurant_id=menu_id"`
+	MenuItems []MenuItem `bun:"rel:has-many,join:restaurant_id=menu_id" json:"-"`
 }
 
 type MenuItem struct {
