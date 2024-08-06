@@ -84,6 +84,7 @@ func (d *DB) Migrate() error {
 	models := []interface{}{
 		(*user.User)(nil),
 		(*restaurant.Restaurant)(nil),
+		(*restaurant.MenuItem)(nil),
 	}
 
 	for _, model := range models {
