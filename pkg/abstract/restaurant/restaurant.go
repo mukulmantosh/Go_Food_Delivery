@@ -10,3 +10,7 @@ type Restaurant interface {
 	ListRestaurants(ctx context.Context) ([]restaurant.Restaurant, error)
 	DeleteRestaurant(ctx context.Context, restaurantId int64) (bool, error)
 }
+
+type MenuItems interface {
+	AddMenu(ctx context.Context, menu *restaurant.MenuItem) (bool, error)
+}
