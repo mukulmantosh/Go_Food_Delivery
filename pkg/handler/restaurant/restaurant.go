@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -52,7 +53,7 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Restaurant created successfully"})
 }
 
-func (s *Restaurant) ListRestaurants(c *gin.Context) {
+func (s *Restaurant) listRestaurants(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 
@@ -63,4 +64,24 @@ func (s *Restaurant) ListRestaurants(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, results)
+}
+
+func (s *Restaurant) deleteRestaurant(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	restaurantId := c.Param("id")
+
+	// Convert to integer
+	restaurantID, _ := strconv.ParseInt(restaurantId, 10, 64)
+
+	restroService := restro.NewRestaurantService(s.Serve.Engine())
+	_, err := restroService.DeleteRestaurant(ctx, restaurantID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+
 }
