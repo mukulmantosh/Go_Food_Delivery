@@ -29,5 +29,5 @@ type MenuItem struct {
 	Category      string  `bun:"category,notnull" json:"category"`
 	Available     bool    `bun:"available,default:True" json:"available"`
 	utils.Timestamp
-	Restaurant Restaurant `bun:"rel:belongs-to,join:restaurant_id=restaurant_id"`
+	Restaurant Restaurant `bun:"rel:belongs-to,join:restaurant_id=restaurant_id" json:"-"`
 }

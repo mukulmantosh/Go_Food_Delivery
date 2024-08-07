@@ -14,5 +14,6 @@ func (s *Restaurant) routes() http.Handler {
 	s.router.GET("/", s.listRestaurants)
 	s.router.DELETE("/:id", s.deleteRestaurant)
 	s.router.POST("/menu", s.addMenu)
+	s.router.GET("/menu/:restaurant_id", s.listMenus)
 	return s.Serve.Gin()
 }
