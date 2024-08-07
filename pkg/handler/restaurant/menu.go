@@ -48,3 +48,29 @@ func (s *Restaurant) listMenus(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, results)
 }
+
+func (s *Restaurant) deleteMenu(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	menuId, err := strconv.ParseInt(c.Param("menu_id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Invalid MenuID"})
+		return
+	}
+	restaurantId, err := strconv.ParseInt(c.Param("restaurant_id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Invalid RestaurantID"})
+		return
+	}
+
+	restroService := restro.NewRestaurantService(s.Serve.Engine())
+	_, err = restroService.DeleteMenu(ctx, menuId, restaurantId)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+
+}
