@@ -2,7 +2,7 @@ package restaurant
 
 import (
 	"Go_Food_Delivery/pkg/database/models/restaurant"
-	"Go_Food_Delivery/pkg/handler/restaurant/unsplash"
+	"Go_Food_Delivery/pkg/service/restaurant/unsplash"
 	"context"
 	"fmt"
 	"github.com/uptrace/bun"
