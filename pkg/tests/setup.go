@@ -4,6 +4,7 @@ import (
 	"Go_Food_Delivery/pkg/database"
 	"log"
 	"log/slog"
+	"os"
 )
 
 // Setup will be bootstrapping our test db.
@@ -21,5 +22,9 @@ func Teardown(testDB database.Database) {
 	err := testDB.Close()
 	if err != nil {
 		log.Fatalf("Error closing testDB: %s", err)
+	}
+	err = os.RemoveAll("./tmp")
+	if err != nil {
+		log.Fatalf("Error removing ./tmp: %s", err)
 	}
 }
