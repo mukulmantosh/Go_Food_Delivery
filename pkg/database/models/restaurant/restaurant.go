@@ -24,6 +24,7 @@ type MenuItem struct {
 	RestaurantID  int64   `bun:"restaurant_id,notnull" json:"restaurant_id"`
 	Name          string  `bun:"name,notnull" json:"name"`
 	Description   string  `bun:"description,notnull" json:"description"`
+	Photo         string  `bun:"photo,nullzero" json:"photo"`
 	Price         float64 `bun:"price,notnull" json:"price"`
 	Category      string  `bun:"category,notnull" json:"category"`
 	Available     bool    `bun:"available,default:True" json:"available"`

@@ -15,6 +15,7 @@ require (
 	github.com/uptrace/bun/driver/pgdriver v1.2.1
 	github.com/uptrace/bun/driver/sqliteshim v1.2.1
 	golang.org/x/crypto v0.25.0
+	google.golang.org/appengine v1.6.7
 )
 
 require (
