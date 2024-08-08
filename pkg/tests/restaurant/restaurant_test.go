@@ -10,16 +10,20 @@ import (
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 )
 
 func TestRestaurant(t *testing.T) {
+	t.Setenv("APP_ENV", "TEST")
 	t.Setenv("STORAGE_TYPE", "local")
 	t.Setenv("STORAGE_DIRECTORY", "uploads")
 	t.Setenv("LOCAL_STORAGE_PATH", "./tmp")
 	testDB := tests.Setup()
 	testServer := handler.NewServer(testDB)
-	restaurant.NewRestaurant(testServer, "/restaurant")
+	AppEnv := os.Getenv("APP_ENV")
+
+	restaurant.NewRestaurant(testServer, "/restaurant", AppEnv)
 
 	var RestaurantResponseID int64
 	name := faker.Name()

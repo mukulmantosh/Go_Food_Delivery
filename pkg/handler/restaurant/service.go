@@ -6,17 +6,19 @@ import (
 )
 
 type Restaurant struct {
-	Serve  *handler.Server
-	group  string
-	router *gin.RouterGroup
+	Serve       *handler.Server
+	group       string
+	router      *gin.RouterGroup
+	Environment string
 }
 
-func NewRestaurant(s *handler.Server, groupName string) *Restaurant {
+func NewRestaurant(s *handler.Server, groupName string, Env string) *Restaurant {
 
 	restaurantService := &Restaurant{
 		s,
 		groupName,
 		&gin.RouterGroup{},
+		Env,
 	}
 
 	restaurantService.router = restaurantService.registerGroup()

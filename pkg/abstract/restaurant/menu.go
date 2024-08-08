@@ -6,6 +6,6 @@ import (
 )
 
 type MenuItems interface {
-	AddMenu(ctx context.Context, menu *restaurant.MenuItem) (bool, error, int64, string)
-	UpdateMenuPhoto(ctx context.Context, menuID int64, imageURL string)
+	AddMenu(ctx context.Context, menu *restaurant.MenuItem) (*restaurant.MenuItem, error)
+	UpdateMenuPhoto(ctx context.Context, menu *restaurant.MenuItem)
 }

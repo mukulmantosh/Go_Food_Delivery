@@ -6,9 +6,10 @@ import (
 )
 
 type RestaurantService struct {
-	db *bun.DB
+	db  *bun.DB
+	Env string
 }
 
-func NewRestaurantService(db database.Database) *RestaurantService {
-	return &RestaurantService{db: db.Db()}
+func NewRestaurantService(db database.Database, Environment string) *RestaurantService {
+	return &RestaurantService{db: db.Db(), Env: Environment}
 }

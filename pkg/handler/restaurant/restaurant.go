@@ -44,7 +44,7 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 	restaurant.State = c.PostForm("state")
 	restaurant.Photo = uploadedFile
 
-	restroService := restro.NewRestaurantService(s.Serve.Engine())
+	restroService := restro.NewRestaurantService(s.Serve.Engine(), s.Environment)
 	_, err = restroService.Add(ctx, &restaurant)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -57,7 +57,7 @@ func (s *Restaurant) listRestaurants(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 
-	restroService := restro.NewRestaurantService(s.Serve.Engine())
+	restroService := restro.NewRestaurantService(s.Serve.Engine(), s.Environment)
 	results, err := restroService.ListRestaurants(ctx)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -75,7 +75,7 @@ func (s *Restaurant) deleteRestaurant(c *gin.Context) {
 	// Convert to integer
 	restaurantID, _ := strconv.ParseInt(restaurantId, 10, 64)
 
-	restroService := restro.NewRestaurantService(s.Serve.Engine())
+	restroService := restro.NewRestaurantService(s.Serve.Engine(), s.Environment)
 	_, err := restroService.DeleteRestaurant(ctx, restaurantID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})

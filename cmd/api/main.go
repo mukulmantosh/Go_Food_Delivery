@@ -7,6 +7,7 @@ import (
 	"Go_Food_Delivery/pkg/handler/restaurant"
 	"github.com/joho/godotenv"
 	"log"
+	"os"
 )
 
 func main() {
@@ -16,6 +17,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	AppEnv := os.Getenv("APP_ENV")
 	db := database.New()
 	// Create Tables
 	if err := db.Migrate(); err != nil {
@@ -25,7 +27,7 @@ func main() {
 	s := handler.NewServer(db)
 
 	registration.NewRegister(s, "/register")
-	restaurant.NewRestaurant(s, "/restaurant")
+	restaurant.NewRestaurant(s, "/restaurant", AppEnv)
 
 	log.Fatal(s.Run())
 
