@@ -3,6 +3,7 @@ package restaurant
 import (
 	"bytes"
 	"mime/multipart"
+	"time"
 )
 
 type FakeRestaurant struct {
@@ -12,6 +13,19 @@ type FakeRestaurant struct {
 	Address     string
 	City        string
 	State       string
+}
+
+type MenuItem struct {
+	MenuID       int       `json:"menu_id"`
+	RestaurantID int       `json:"restaurant_id"`
+	Name         string    `json:"name"`
+	Description  string    `json:"description"`
+	Photo        string    `json:"photo"`
+	Price        float64   `json:"price"`
+	Category     string    `json:"category"`
+	Available    bool      `json:"available"`
+	CreatedAt    time.Time `json:"CreatedAt"`
+	UpdatedAt    time.Time `json:"UpdatedAt"`
 }
 
 func generateData(restaurant FakeRestaurant) (*bytes.Buffer, string, error) {

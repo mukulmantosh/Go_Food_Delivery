@@ -27,7 +27,7 @@ func TestAddUser(t *testing.T) {
 		Password string `json:"password" faker:"password"`
 	}
 
-	t.Run("should return 201 created", func(t *testing.T) {
+	t.Run("User::Create", func(t *testing.T) {
 
 		var customUser FakeUser
 		_ = faker.FakeData(&customUser)

@@ -6,6 +6,7 @@ import (
 	"Go_Food_Delivery/pkg/tests"
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/go-faker/faker/v4"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -25,6 +26,7 @@ func TestRestaurantMenu(t *testing.T) {
 	restaurant.NewRestaurant(testServer, "/restaurant", AppEnv)
 
 	var RestaurantResponseID int64
+	var RestaurantMenuID int64
 	name := faker.Name()
 	file := []byte{10, 10, 10, 10, 10} // fake image bytes
 	description := faker.Paragraph()
@@ -115,10 +117,39 @@ func TestRestaurantMenu(t *testing.T) {
 		w := httptest.NewRecorder()
 		testServer.Gin().ServeHTTP(w, req)
 		assert.Equal(t, http.StatusCreated, w.Code)
-		//assert.Equal(t, map[string]any{"message": "New Menu Added!"}, w.Body.String())
 
 	})
 
+	t.Run("RestaurantMenu::List", func(t *testing.T) {
+		url := fmt.Sprintf("%s%d", "/restaurant/menu/", RestaurantResponseID)
+		req, _ := http.NewRequest(http.MethodGet, url, nil)
+		req.Header.Set("Content-Type", "application/json")
+		w := httptest.NewRecorder()
+		testServer.Gin().ServeHTTP(w, req)
+
+		var menuItems []MenuItem
+		err := json.Unmarshal(w.Body.Bytes(), &menuItems)
+		if err != nil {
+			fmt.Println("Error unmarshalling JSON:", err)
+			return
+		}
+
+		RestaurantMenuID = int64(menuItems[0].MenuID)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+	})
+
+	t.Run("RestaurantMenu::Delete", func(t *testing.T) {
+		url := fmt.Sprintf("%s%d/%d", "/restaurant/menu/", RestaurantResponseID, RestaurantMenuID)
+		req, _ := http.NewRequest(http.MethodDelete, url, nil)
+		req.Header.Set("Content-Type", "application/json")
+		w := httptest.NewRecorder()
+		testServer.Gin().ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusNoContent, w.Code)
+
+	})
 	// Cleanup
 	tests.Teardown(testDB)
 
