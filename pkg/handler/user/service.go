@@ -1,4 +1,4 @@
-package register
+package user
 
 import (
 	"Go_Food_Delivery/pkg/handler"

@@ -1,4 +1,4 @@
-package register
+package user
 
 import (
 	"github.com/gin-gonic/gin"
@@ -10,8 +10,8 @@ func (s *Register) registerGroup() *gin.RouterGroup {
 }
 
 func (s *Register) routes() http.Handler {
-	s.router.POST("/user", s.addUser)
-	s.router.DELETE("/user/:id", s.deleteUser)
-	s.router.POST("/user/login", s.loginUser)
+	s.router.POST("/", s.addUser)
+	s.router.DELETE("/:id", s.deleteUser)
+	s.router.POST("/login", s.loginUser)
 	return s.Serve.Gin()
 }

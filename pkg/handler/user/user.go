@@ -1,4 +1,4 @@
-package register
+package user
 
 import (
 	userModel "Go_Food_Delivery/pkg/database/models/user"

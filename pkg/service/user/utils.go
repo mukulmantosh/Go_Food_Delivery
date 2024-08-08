@@ -6,7 +6,7 @@ import (
 	"errors"
 )
 
-func ValidateAccount(fn func(ctx context.Context, user *user.LoginUser) (string, error),
+func ValidateAccount(login func(ctx context.Context, user *user.LoginUser) (string, error),
 	accountExists func(ctx context.Context, email string) (bool, error),
 	validatePassword func(ctx context.Context, user *user.LoginUser) (bool, error)) func(ctx context.Context, user *user.LoginUser) (string, error) {
 	return func(ctx context.Context, user *user.LoginUser) (string, error) {
@@ -23,6 +23,6 @@ func ValidateAccount(fn func(ctx context.Context, user *user.LoginUser) (string,
 			return "", err
 		}
 
-		return fn(ctx, user)
+		return login(ctx, user)
 	}
 }

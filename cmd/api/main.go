@@ -3,8 +3,8 @@ package main
 import (
 	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/handler"
-	registration "Go_Food_Delivery/pkg/handler/register"
 	"Go_Food_Delivery/pkg/handler/restaurant"
+	"Go_Food_Delivery/pkg/handler/user"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -26,7 +26,7 @@ func main() {
 
 	s := handler.NewServer(db)
 
-	registration.NewRegister(s, "/register")
+	user.NewRegister(s, "/user")
 	restaurant.NewRestaurant(s, "/restaurant", AppEnv)
 
 	log.Fatal(s.Run())
