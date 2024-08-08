@@ -10,7 +10,6 @@ import (
 )
 
 func GetUnSplashImageURL(menuItem string) string {
-
 	url := "https://api.unsplash.com/search/photos/?page=1&query=" + menuItem + "&w=400&h=400"
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -35,7 +34,7 @@ func GetUnSplashImageURL(menuItem string) string {
 	// Decode the JSON response into the struct
 	var apiResponse UnSplash
 	if err := json.Unmarshal(body, &apiResponse); err != nil {
-		log.Fatalf("Failed to decode JSON response: %v", err)
+		log.Fatalf("UnSplash::Failed to decode JSON response: %v", err)
 	}
 
 	return apiResponse.Results[0].Urls.Small

@@ -21,10 +21,14 @@ func (s *Restaurant) addMenu(c *gin.Context) {
 	}
 
 	restroService := restro.NewRestaurantService(s.Serve.Engine())
-	_, err := restroService.AddMenu(ctx, &menuItem)
+	menuAdded, err, menuId, imagePath := restroService.AddMenu(ctx, &menuItem)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
+	}
+	if menuAdded {
+		// Update Photo from UnSplash
+		restroService.UpdateMenuPhoto(ctx, menuId, imagePath)
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "New Menu Added!"})

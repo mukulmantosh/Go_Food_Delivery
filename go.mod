@@ -14,8 +14,8 @@ require (
 	github.com/uptrace/bun/dialect/sqlitedialect v1.2.1
 	github.com/uptrace/bun/driver/pgdriver v1.2.1
 	github.com/uptrace/bun/driver/sqliteshim v1.2.1
+	go.uber.org/mock v0.4.0
 	golang.org/x/crypto v0.25.0
-	google.golang.org/appengine v1.6.7
 )
 
 require (

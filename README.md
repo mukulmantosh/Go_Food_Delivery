@@ -28,3 +28,5 @@ STORAGE_TYPE=local
 STORAGE_DIRECTORY=uploads
 LOCAL_STORAGE_PATH=C:\Users\win10\GolandProjects\Go_Food_Delivery\uploads
 ```
+
+mockgen -source=pkg/abstract/restaurant/menu.go -destination=pkg/abstract/restaurant/mock_menu.go -package=restaurant                 

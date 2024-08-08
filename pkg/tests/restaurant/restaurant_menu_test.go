@@ -4,8 +4,8 @@ import (
 	"Go_Food_Delivery/pkg/handler"
 	"Go_Food_Delivery/pkg/handler/restaurant"
 	"Go_Food_Delivery/pkg/tests"
+	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/go-faker/faker/v4"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -13,11 +13,12 @@ import (
 	"testing"
 )
 
-func TestRestaurant(t *testing.T) {
+func TestRestaurantMenu(t *testing.T) {
 	t.Setenv("STORAGE_TYPE", "local")
 	t.Setenv("STORAGE_DIRECTORY", "uploads")
 	t.Setenv("LOCAL_STORAGE_PATH", "./tmp")
 	testDB := tests.Setup()
+
 	testServer := handler.NewServer(testDB)
 	restaurant.NewRestaurant(testServer, "/restaurant")
 
@@ -28,6 +29,15 @@ func TestRestaurant(t *testing.T) {
 	address := faker.Word()
 	city := faker.Word()
 	state := faker.Word()
+
+	type FakeRestaurantMenu struct {
+		RestaurantID int64   `json:"restaurant_id"`
+		Name         string  `json:"name"`
+		Description  string  `json:"description"`
+		Price        float64 `json:"price"`
+		Category     string  `json:"category"`
+		Available    bool    `json:"available"`
+	}
 
 	form := FakeRestaurant{
 		Name:        name,
@@ -70,6 +80,7 @@ func TestRestaurant(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodGet, "/restaurant/", nil)
 		req.Header.Set("Content-Type", "application/Json")
 		w := httptest.NewRecorder()
+
 		testServer.Gin().ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 
@@ -84,13 +95,26 @@ func TestRestaurant(t *testing.T) {
 
 	})
 
-	t.Run("Restaurant::Delete", func(t *testing.T) {
-		url := fmt.Sprintf("/restaurant/%d", RestaurantResponseID)
-		req, _ := http.NewRequest(http.MethodDelete, url, nil)
-		req.Header.Set("Content-Type", "application/Json")
+	t.Run("RestaurantMenu::Create", func(t *testing.T) {
+		var customMenu FakeRestaurantMenu
+
+		customMenu.Available = true
+		customMenu.Price = 40.35
+		customMenu.Name = "burger"
+		customMenu.Description = "burger"
+		customMenu.Category = "FAST_FOODS"
+		customMenu.RestaurantID = RestaurantResponseID
+		payload, err := json.Marshal(&customMenu)
+		if err != nil {
+			t.Fatal("Error::", err)
+		}
+		req, _ := http.NewRequest(http.MethodPost, "/restaurant/menu", bytes.NewBuffer(payload))
+		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 		testServer.Gin().ServeHTTP(w, req)
-		assert.Equal(t, http.StatusNoContent, w.Code)
+		assert.Equal(t, http.StatusCreated, w.Code)
+		//assert.Equal(t, map[string]any{"message": "New Menu Added!"}, w.Body.String())
+
 	})
 
 	// Cleanup
