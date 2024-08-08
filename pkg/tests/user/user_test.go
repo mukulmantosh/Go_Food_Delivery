@@ -2,7 +2,7 @@ package user
 
 import (
 	"Go_Food_Delivery/pkg/handler"
-	registration "Go_Food_Delivery/pkg/handler/register"
+	"Go_Food_Delivery/pkg/handler/user"
 	"Go_Food_Delivery/pkg/tests"
 	"encoding/json"
 	"github.com/go-faker/faker/v4"
@@ -19,7 +19,7 @@ func TestAddUser(t *testing.T) {
 	t.Setenv("LOCAL_STORAGE_PATH", "./tmp")
 	testDB := tests.Setup()
 	testServer := handler.NewServer(testDB)
-	registration.NewRegister(testServer, "/register")
+	user.NewRegister(testServer, "/register")
 
 	type FakeUser struct {
 		User     string `json:"user" faker:"name"`
