@@ -1,8 +1,8 @@
 package user
 
 import (
-	"Go_Food_Delivery/pkg/database/models/user/utils"
 	"github.com/uptrace/bun"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 )
 
@@ -14,11 +14,19 @@ type User struct {
 	Password      string `bun:",notnull" json:"password"`
 }
 
+type LoginUser struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func (u *User) HashPassword() {
-	salt, err := utils.GenerateSalt()
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("error hashing password")
 	}
-	passwordHash := utils.Hash(u.Password, salt)
-	u.Password = passwordHash
+	u.Password = string(hashedPassword)
+}
+
+func (l *LoginUser) CheckPassword(hashPassword string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashPassword), []byte(l.Password))
 }

@@ -50,3 +50,23 @@ func (s *Register) deleteUser(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 
 }
+
+func (s *Register) loginUser(c *gin.Context) {
+	_, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	var user userModel.LoginUser
+	if err := c.BindJSON(&user); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	userService := database.NewUserService(s.Serve.Engine())
+	decoratedLogin := database.ValidateAccount(userService.Login, userService.UserExist, userService.ValidatePassword)
+	result, err := decoratedLogin(c, &userModel.LoginUser{Email: user.Email, Password: user.Password})
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"token": result})
+}

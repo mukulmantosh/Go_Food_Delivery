@@ -3,18 +3,26 @@ package user
 import (
 	"Go_Food_Delivery/pkg/database/models/user"
 	"context"
-	"log/slog"
+	"errors"
 )
 
-func (usrSrv *UsrService) accountExists(ctx context.Context, email string) (bool, error) {
-	var count int
-	err := usrSrv.db.NewSelect().Model((*user.User)(nil)).
-		ColumnExpr("COUNT(*)").Where("email = ?", email).
-		Scan(ctx, &count)
+func ValidateAccount(fn func(ctx context.Context, user *user.LoginUser) (string, error),
+	accountExists func(ctx context.Context, email string) (bool, error),
+	validatePassword func(ctx context.Context, user *user.LoginUser) (bool, error)) func(ctx context.Context, user *user.LoginUser) (string, error) {
+	return func(ctx context.Context, user *user.LoginUser) (string, error) {
+		exists, err := accountExists(ctx, user.Email)
+		if err != nil {
+			return "", err
+		}
+		if !exists {
+			return "", errors.New("we did not find any account with this user")
+		}
 
-	if err != nil {
-		slog.Info("UserService.accountExists: %v", err)
-		return false, err
+		_, err = validatePassword(ctx, user)
+		if err != nil {
+			return "", err
+		}
+
+		return fn(ctx, user)
 	}
-	return count > 0, nil
 }
