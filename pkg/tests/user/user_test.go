@@ -19,7 +19,7 @@ func TestAddUser(t *testing.T) {
 	t.Setenv("LOCAL_STORAGE_PATH", "./tmp")
 	testDB := tests.Setup()
 	testServer := handler.NewServer(testDB)
-	user.NewRegister(testServer, "/register")
+	user.NewRegister(testServer, "/user")
 
 	type FakeUser struct {
 		User     string `json:"user" faker:"name"`
@@ -36,7 +36,7 @@ func TestAddUser(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		req, _ := http.NewRequest(http.MethodPost, "/register/user", strings.NewReader(string(payload)))
+		req, _ := http.NewRequest(http.MethodPost, "/user/", strings.NewReader(string(payload)))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 		testServer.Gin().ServeHTTP(w, req)
