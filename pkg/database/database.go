@@ -23,6 +23,10 @@ type Database interface {
 	Migrate() error
 	HealthCheck() bool
 	Close() error
+	Insert(ctx context.Context, model any) (sql.Result, error)
+	Delete(ctx context.Context, tableName string, columnName string, parameter any) (sql.Result, error)
+	Select(ctx context.Context, model any, columnName string, parameter any) error
+	Count(ctx context.Context, tableName string, ColumnExpression string, columnName string, parameter any) (int64, error)
 }
 
 type DB struct {
@@ -31,6 +35,40 @@ type DB struct {
 
 func (d *DB) Db() *bun.DB {
 	return d.db
+}
+
+func (d *DB) Insert(ctx context.Context, model any) (sql.Result, error) {
+	result, err := d.db.NewInsert().Model(model).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (d *DB) Delete(ctx context.Context, tableName string, columnName string, parameter any) (sql.Result, error) {
+	result, err := d.db.NewDelete().Table(tableName).Where(fmt.Sprintf("%s = ?", columnName), parameter).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
+
+func (d *DB) Select(ctx context.Context, model any, columnName string, parameter any) error {
+	err := d.db.NewSelect().Model(model).Where(fmt.Sprintf("%s = ?", columnName), parameter).Scan(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *DB) Count(ctx context.Context, tableName string, ColumnExpression string, columnName string, parameter any) (int64, error) {
+	var count int64
+	err := d.db.NewSelect().Table(tableName).ColumnExpr(ColumnExpression).
+		Where(fmt.Sprintf("%s = ?", columnName), parameter).Scan(ctx, &count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 func (d *DB) HealthCheck() bool {

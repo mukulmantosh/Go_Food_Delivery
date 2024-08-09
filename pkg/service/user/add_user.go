@@ -4,6 +4,7 @@ import (
 	"Go_Food_Delivery/pkg/database/models/user"
 	"context"
 	"errors"
+	"fmt"
 )
 
 func (usrSrv *UsrService) Add(ctx context.Context, user *user.User) (bool, error) {
@@ -11,8 +12,9 @@ func (usrSrv *UsrService) Add(ctx context.Context, user *user.User) (bool, error
 	if accountExists {
 		return false, errors.New("the user you are trying to register already exists")
 	} else {
-		user.HashPassword() //encrypt password
-		_, err := usrSrv.db.NewInsert().Model(user).Exec(ctx)
+		user.HashPassword()
+		_, err := usrSrv.db.Insert(ctx, user)
+		fmt.Println("Inserted user", user.ID)
 		if err != nil {
 			return false, err
 		}

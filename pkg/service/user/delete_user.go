@@ -1,12 +1,11 @@
 package user
 
 import (
-	"Go_Food_Delivery/pkg/database/models/user"
 	"context"
 )
 
 func (usrSrv *UsrService) Delete(ctx context.Context, userId int64) (bool, error) {
-	_, err := usrSrv.db.NewDelete().Model((*user.User)(nil)).Where("id = ?", userId).Exec(ctx)
+	_, err := usrSrv.db.Delete(ctx, "users", "id", userId)
 	if err != nil {
 		return false, err
 	}

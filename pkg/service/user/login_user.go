@@ -29,13 +29,9 @@ func (usrSrv *UsrService) Login(ctx context.Context, user *user.LoginUser) (stri
 }
 
 func (usrSrv *UsrService) UserExist(ctx context.Context, email string) (bool, error) {
-	var count int
-	err := usrSrv.db.NewSelect().Model((*user.User)(nil)).
-		ColumnExpr("COUNT(*)").Where("email = ?", email).
-		Scan(ctx, &count)
-
+	count, err := usrSrv.db.Count(ctx, "users", "COUNT(*)", "email", email)
 	if err != nil {
-		slog.Info("UserService.accountExists: %v", err)
+		slog.Info("UserService.UserExist::Error %v", err)
 		return false, err
 	}
 	return count > 0, nil
@@ -43,11 +39,12 @@ func (usrSrv *UsrService) UserExist(ctx context.Context, email string) (bool, er
 
 func (usrSrv *UsrService) ValidatePassword(ctx context.Context, userInput *user.LoginUser) (bool, error) {
 	var userAccount user.User
-	err := usrSrv.db.NewSelect().Model(&userAccount).
-		Where("email = ?", userInput.Email).Scan(ctx)
+	err := usrSrv.db.Select(ctx, &userAccount, "email", userInput.Email)
 	if err != nil {
+		slog.Info("UserService.ValidatePassword::Error %v", err)
 		return false, err
 	}
+
 	err = userInput.CheckPassword(userAccount.Password)
 	if err != nil {
 		return false, errors.New("invalid password")
