@@ -15,6 +15,7 @@ import (
 	"log/slog"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -40,8 +41,7 @@ func (d *DB) Db() *bun.DB {
 }
 
 func (d *DB) Insert(ctx context.Context, model any) (sql.Result, error) {
-	modelInfo := d.loadModel(model, "INSERT").(*bun.InsertQuery)
-	result, err := modelInfo.Exec(ctx)
+	result, err := d.db.NewInsert().Model(model).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +57,7 @@ func (d *DB) Delete(ctx context.Context, tableName string, filter Filter) (sql.R
 }
 
 func (d *DB) Select(ctx context.Context, model any, columnName string, parameter any) error {
-	modelInfo := d.loadModel(model, "SELECT").(bun.SelectQuery)
-	err := modelInfo.Where(fmt.Sprintf("%s = ?", columnName), parameter).Scan(ctx)
+	err := d.db.NewSelect().Model(model).Where(fmt.Sprintf("%s = ?", columnName), parameter).Scan(ctx)
 	if err != nil {
 		return err
 	}
@@ -73,6 +72,31 @@ func (d *DB) Count(ctx context.Context, tableName string, ColumnExpression strin
 		return 0, err
 	}
 	return count, nil
+}
+
+func (d *DB) whereCondition(filter Filter) string {
+	var whereClauses []string
+	for key, value := range filter {
+		var formattedValue string
+		switch v := value.(type) {
+		case string:
+			// Quote string values
+			formattedValue = fmt.Sprintf("'%s'", v)
+		case int64:
+			formattedValue = fmt.Sprintf("%d", v)
+		default:
+			log.Fatal("DB::Query:: Un-handled type for where condition!")
+
+		}
+		whereClauses = append(whereClauses, fmt.Sprintf("%s = %s", key, formattedValue))
+	}
+
+	var result string
+	if len(whereClauses) > 0 {
+		result = strings.Join(whereClauses, " AND ")
+	}
+
+	return result
 }
 
 func (d *DB) HealthCheck() bool {
