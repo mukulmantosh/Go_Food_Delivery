@@ -4,8 +4,8 @@ import (
 	restaurantModel "Go_Food_Delivery/pkg/database/models/restaurant"
 	restro "Go_Food_Delivery/pkg/service/restaurant"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -31,7 +31,7 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 
 	_, err = s.Serve.Storage().Upload(newFileName, file)
 	if err != nil {
-		fmt.Println("Error:", err)
+		slog.Info("Error", err.Error())
 	}
 
 	uploadedFile := filepath.Join(os.Getenv("STORAGE_DIRECTORY"), newFileName)

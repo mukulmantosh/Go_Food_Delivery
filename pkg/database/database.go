@@ -24,10 +24,12 @@ type Database interface {
 	HealthCheck() bool
 	Close() error
 	Insert(ctx context.Context, model any) (sql.Result, error)
-	Delete(ctx context.Context, tableName string, columnName string, parameter any) (sql.Result, error)
+	Delete(ctx context.Context, tableName string, filter Filter) (sql.Result, error)
 	Select(ctx context.Context, model any, columnName string, parameter any) error
 	Count(ctx context.Context, tableName string, ColumnExpression string, columnName string, parameter any) (int64, error)
 }
+
+type Filter map[string]any
 
 type DB struct {
 	db *bun.DB
@@ -38,15 +40,16 @@ func (d *DB) Db() *bun.DB {
 }
 
 func (d *DB) Insert(ctx context.Context, model any) (sql.Result, error) {
-	result, err := d.db.NewInsert().Model(model).Exec(ctx)
+	modelInfo := d.loadModel(model, "INSERT").(*bun.InsertQuery)
+	result, err := modelInfo.Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (d *DB) Delete(ctx context.Context, tableName string, columnName string, parameter any) (sql.Result, error) {
-	result, err := d.db.NewDelete().Table(tableName).Where(fmt.Sprintf("%s = ?", columnName), parameter).Exec(ctx)
+func (d *DB) Delete(ctx context.Context, tableName string, filter Filter) (sql.Result, error) {
+	result, err := d.db.NewDelete().Table(tableName).Where(d.whereCondition(filter)).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +57,8 @@ func (d *DB) Delete(ctx context.Context, tableName string, columnName string, pa
 }
 
 func (d *DB) Select(ctx context.Context, model any, columnName string, parameter any) error {
-	err := d.db.NewSelect().Model(model).Where(fmt.Sprintf("%s = ?", columnName), parameter).Scan(ctx)
+	modelInfo := d.loadModel(model, "SELECT").(bun.SelectQuery)
+	err := modelInfo.Where(fmt.Sprintf("%s = ?", columnName), parameter).Scan(ctx)
 	if err != nil {
 		return err
 	}

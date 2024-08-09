@@ -4,7 +4,6 @@ import (
 	"Go_Food_Delivery/pkg/database/models/user"
 	"context"
 	"errors"
-	"fmt"
 )
 
 func (usrSrv *UsrService) Add(ctx context.Context, user *user.User) (bool, error) {
@@ -14,7 +13,6 @@ func (usrSrv *UsrService) Add(ctx context.Context, user *user.User) (bool, error
 	} else {
 		user.HashPassword()
 		_, err := usrSrv.db.Insert(ctx, user)
-		fmt.Println("Inserted user", user.ID)
 		if err != nil {
 			return false, err
 		}
