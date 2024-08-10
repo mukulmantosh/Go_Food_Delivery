@@ -20,26 +20,21 @@ import (
 )
 
 type Database interface {
-	Db() *bun.DB
-	Migrate() error
-	HealthCheck() bool
-	Close() error
 	Insert(ctx context.Context, model any) (sql.Result, error)
 	Delete(ctx context.Context, tableName string, filter Filter) (sql.Result, error)
 	Select(ctx context.Context, model any, columnName string, parameter any) error
 	SelectAll(ctx context.Context, tableName string, model any) error
 	Update(ctx context.Context, tableName string, Set Filter, Condition Filter) (sql.Result, error)
 	Count(ctx context.Context, tableName string, ColumnExpression string, columnName string, parameter any) (int64, error)
+	Migrate() error
+	HealthCheck() bool
+	Close() error
 }
 
 type Filter map[string]any
 
 type DB struct {
 	db *bun.DB
-}
-
-func (d *DB) Db() *bun.DB {
-	return d.db
 }
 
 func (d *DB) Insert(ctx context.Context, model any) (sql.Result, error) {

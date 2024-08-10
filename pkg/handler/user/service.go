@@ -18,6 +18,7 @@ func NewRegister(s *handler.Server, groupName string) *Register {
 		groupName,
 		&gin.RouterGroup{},
 	}
+
 	registrationService.router = registrationService.registerGroup()
 	registrationService.routes()
 	return registrationService

@@ -48,6 +48,10 @@ func (s *Restaurant) listMenus(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
+	if len(results) == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No results found"})
+		return
+	}
 	c.JSON(http.StatusOK, results)
 }
 

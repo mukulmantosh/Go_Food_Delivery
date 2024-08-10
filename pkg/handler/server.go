@@ -4,6 +4,8 @@ import (
 	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/storage"
 	"github.com/gin-gonic/gin"
+	sloggin "github.com/samber/slog-gin"
+	"log/slog"
 	"os"
 )
 
@@ -26,7 +28,13 @@ func (server *Server) Gin() *gin.Engine {
 }
 
 func NewServer(db database.Database) *Server {
-	ginEngine := gin.Default()
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+
+	ginEngine := gin.New()
+
+	// Setting Logger & MultipartMemory
+	ginEngine.Use(sloggin.New(logger))
+	ginEngine.Use(gin.Recovery())
 	ginEngine.MaxMultipartMemory = 8 << 20 // 8 MB
 
 	localStoragePath := os.Getenv("LOCAL_STORAGE_PATH")

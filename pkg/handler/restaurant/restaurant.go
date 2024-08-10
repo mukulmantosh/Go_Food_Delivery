@@ -31,7 +31,7 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 
 	_, err = s.Serve.Storage().Upload(newFileName, file)
 	if err != nil {
-		slog.Info("Error", err.Error())
+		slog.Error("Error", "addRestaurant", err.Error())
 	}
 
 	uploadedFile := filepath.Join(os.Getenv("STORAGE_DIRECTORY"), newFileName)
