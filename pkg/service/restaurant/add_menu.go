@@ -3,6 +3,7 @@
 package restaurant
 
 import (
+	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/database/models/restaurant"
 	"Go_Food_Delivery/pkg/service/restaurant/unsplash"
 	"context"
@@ -16,7 +17,7 @@ import (
 var ImageUpdateLock *sync.Mutex = &sync.Mutex{}
 
 func (restSrv *RestaurantService) AddMenu(ctx context.Context, menu *restaurant.MenuItem) (*restaurant.MenuItem, error) {
-	_, err := restSrv.db.NewInsert().Model(menu).Exec(ctx)
+	_, err := restSrv.db.Insert(ctx, menu)
 	if err != nil {
 		return &restaurant.MenuItem{}, err
 	}
@@ -40,11 +41,10 @@ func (restSrv *RestaurantService) UpdateMenuPhoto(ctx context.Context, menu *res
 	go func() {
 		ImageUpdateLock.Lock()
 		defer ImageUpdateLock.Unlock()
+		setFilter := database.Filter{"photo": imageFileLocalPath}
+		whereFilter := database.Filter{"menu_id": menu.MenuID}
 
-		_, err := restSrv.db.NewUpdate().Table("menu_item").
-			Set("photo = ?", imageFileLocalPath).
-			Where("menu_id = ?", menu.MenuID).
-			Exec(ctx)
+		_, err := restSrv.db.Update(ctx, "menu_item", setFilter, whereFilter)
 		if err != nil {
 			slog.Info("UnSplash DB Image Update", "error", err)
 		}

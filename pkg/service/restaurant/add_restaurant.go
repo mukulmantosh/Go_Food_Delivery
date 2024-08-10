@@ -6,7 +6,7 @@ import (
 )
 
 func (restSrv *RestaurantService) Add(ctx context.Context, restaurant *restaurant.Restaurant) (bool, error) {
-	_, err := restSrv.db.NewInsert().Model(restaurant).Exec(ctx)
+	_, err := restSrv.db.Insert(ctx, restaurant)
 	if err != nil {
 		return false, err
 	}

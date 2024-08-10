@@ -1,14 +1,14 @@
 package restaurant
 
 import (
+	"Go_Food_Delivery/pkg/database"
 	"context"
 )
 
 func (restSrv *RestaurantService) DeleteMenu(ctx context.Context, menuId int64, restaurantId int64) (bool, error) {
-	_, err := restSrv.db.NewDelete().Table("menu_item").
-		Where("menu_id = ?", menuId).
-		Where("restaurant_id = ?", restaurantId).
-		Exec(ctx)
+	filter := database.Filter{"menu_id": menuId, "restaurant_id": restaurantId}
+
+	_, err := restSrv.db.Delete(ctx, "menu_item", filter)
 	if err != nil {
 		return false, err
 	}

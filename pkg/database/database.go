@@ -27,6 +27,8 @@ type Database interface {
 	Insert(ctx context.Context, model any) (sql.Result, error)
 	Delete(ctx context.Context, tableName string, filter Filter) (sql.Result, error)
 	Select(ctx context.Context, model any, columnName string, parameter any) error
+	SelectAll(ctx context.Context, tableName string, model any) error
+	Update(ctx context.Context, tableName string, Set Filter, Condition Filter) (sql.Result, error)
 	Count(ctx context.Context, tableName string, ColumnExpression string, columnName string, parameter any) (int64, error)
 }
 
@@ -48,6 +50,14 @@ func (d *DB) Insert(ctx context.Context, model any) (sql.Result, error) {
 	return result, nil
 }
 
+func (d *DB) Update(ctx context.Context, tableName string, Set Filter, Condition Filter) (sql.Result, error) {
+	result, err := d.db.NewUpdate().Table(tableName).Set(d.whereCondition(Set)).Where(d.whereCondition(Condition)).Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 func (d *DB) Delete(ctx context.Context, tableName string, filter Filter) (sql.Result, error) {
 	result, err := d.db.NewDelete().Table(tableName).Where(d.whereCondition(filter)).Exec(ctx)
 	if err != nil {
@@ -59,6 +69,13 @@ func (d *DB) Delete(ctx context.Context, tableName string, filter Filter) (sql.R
 func (d *DB) Select(ctx context.Context, model any, columnName string, parameter any) error {
 	err := d.db.NewSelect().Model(model).Where(fmt.Sprintf("%s = ?", columnName), parameter).Scan(ctx)
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *DB) SelectAll(ctx context.Context, tableName string, model any) error {
+	if err := d.db.NewSelect().Table(tableName).Scan(ctx, model); err != nil {
 		return err
 	}
 	return nil

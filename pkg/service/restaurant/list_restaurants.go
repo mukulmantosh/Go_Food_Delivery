@@ -8,8 +8,9 @@ import (
 func (restSrv *RestaurantService) ListRestaurants(ctx context.Context) ([]restaurantModel.Restaurant, error) {
 	var restaurants []restaurantModel.Restaurant
 
-	if err := restSrv.db.NewSelect().Table("restaurant").Scan(ctx, &restaurants); err != nil {
-		return restaurants, err
+	err := restSrv.db.SelectAll(ctx, "restaurant", &restaurants)
+	if err != nil {
+		return nil, err
 	}
 
 	return restaurants, nil

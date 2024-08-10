@@ -2,14 +2,13 @@ package restaurant
 
 import (
 	"Go_Food_Delivery/pkg/database"
-	"github.com/uptrace/bun"
 )
 
 type RestaurantService struct {
-	db  *bun.DB
+	db  database.Database
 	Env string
 }
 
 func NewRestaurantService(db database.Database, Environment string) *RestaurantService {
-	return &RestaurantService{db: db.Db(), Env: Environment}
+	return &RestaurantService{db: db, Env: Environment}
 }
