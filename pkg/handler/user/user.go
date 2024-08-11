@@ -20,8 +20,7 @@ func (s *Register) addUser(c *gin.Context) {
 		return
 	}
 
-	userService := database.NewUserService(s.Serve.Engine())
-	_, err := userService.Add(ctx, &user)
+	_, err := s.service.Add(ctx, &user)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -40,8 +39,7 @@ func (s *Register) deleteUser(c *gin.Context) {
 	// Convert to integer
 	userID, _ := strconv.ParseInt(userId, 10, 64)
 
-	userService := database.NewUserService(s.Serve.Engine())
-	_, err := userService.Delete(ctx, userID)
+	_, err := s.service.Delete(ctx, userID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -61,9 +59,8 @@ func (s *Register) loginUser(c *gin.Context) {
 		return
 	}
 
-	userService := database.NewUserService(s.Serve.Engine())
-	decoratedLogin := database.ValidateAccount(userService.Login, userService.UserExist, userService.ValidatePassword)
-	result, err := decoratedLogin(c, &userModel.LoginUser{Email: user.Email, Password: user.Password})
+	login := database.ValidateAccount(s.service.Login, s.service.UserExist, s.service.ValidatePassword)
+	result, err := login(c, &userModel.LoginUser{Email: user.Email, Password: user.Password})
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

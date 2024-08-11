@@ -2,7 +2,6 @@ package restaurant
 
 import (
 	restaurantModel "Go_Food_Delivery/pkg/database/models/restaurant"
-	restro "Go_Food_Delivery/pkg/service/restaurant"
 	"context"
 	"github.com/gin-gonic/gin"
 	"log/slog"
@@ -44,8 +43,7 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 	restaurant.State = c.PostForm("state")
 	restaurant.Photo = uploadedFile
 
-	restroService := restro.NewRestaurantService(s.Serve.Engine(), s.Environment)
-	_, err = restroService.Add(ctx, &restaurant)
+	_, err = s.service.Add(ctx, &restaurant)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -57,8 +55,7 @@ func (s *Restaurant) listRestaurants(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 
-	restroService := restro.NewRestaurantService(s.Serve.Engine(), s.Environment)
-	results, err := restroService.ListRestaurants(ctx)
+	results, err := s.service.ListRestaurants(ctx)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -75,8 +72,7 @@ func (s *Restaurant) deleteRestaurant(c *gin.Context) {
 	// Convert to integer
 	restaurantID, _ := strconv.ParseInt(restaurantId, 10, 64)
 
-	restroService := restro.NewRestaurantService(s.Serve.Engine(), s.Environment)
-	_, err := restroService.DeleteRestaurant(ctx, restaurantID)
+	_, err := s.service.DeleteRestaurant(ctx, restaurantID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

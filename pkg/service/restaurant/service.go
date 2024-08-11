@@ -6,9 +6,9 @@ import (
 
 type RestaurantService struct {
 	db  database.Database
-	Env string
+	env string
 }
 
-func NewRestaurantService(db database.Database, Environment string) *RestaurantService {
-	return &RestaurantService{db: db, Env: Environment}
+func NewRestaurantService(db database.Database, env string) *RestaurantService {
+	return &RestaurantService{db, env}
 }

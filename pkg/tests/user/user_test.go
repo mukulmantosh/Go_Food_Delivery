@@ -3,23 +3,30 @@ package user
 import (
 	"Go_Food_Delivery/pkg/handler"
 	"Go_Food_Delivery/pkg/handler/user"
+	usr "Go_Food_Delivery/pkg/service/user"
 	"Go_Food_Delivery/pkg/tests"
 	"encoding/json"
 	"github.com/go-faker/faker/v4"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 )
 
 func TestAddUser(t *testing.T) {
+	t.Setenv("APP_ENV", "TEST")
 	t.Setenv("STORAGE_TYPE", "local")
 	t.Setenv("STORAGE_DIRECTORY", "uploads")
 	t.Setenv("LOCAL_STORAGE_PATH", "./tmp")
 	testDB := tests.Setup()
+	AppEnv := os.Getenv("APP_ENV")
 	testServer := handler.NewServer(testDB)
-	user.NewRegister(testServer, "/user")
+
+	// User
+	userService := usr.NewUserService(testDB, AppEnv)
+	user.NewRegister(testServer, "/user", userService)
 
 	type FakeUser struct {
 		User     string `json:"user" faker:"name"`

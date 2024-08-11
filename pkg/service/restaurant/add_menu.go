@@ -25,7 +25,7 @@ func (restSrv *RestaurantService) AddMenu(ctx context.Context, menu *restaurant.
 }
 
 func (restSrv *RestaurantService) UpdateMenuPhoto(ctx context.Context, menu *restaurant.MenuItem) {
-	if restSrv.Env == "TEST" {
+	if restSrv.env == "TEST" {
 		return
 	}
 

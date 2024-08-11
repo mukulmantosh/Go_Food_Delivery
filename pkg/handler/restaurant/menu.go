@@ -2,7 +2,6 @@ package restaurant
 
 import (
 	"Go_Food_Delivery/pkg/database/models/restaurant"
-	restro "Go_Food_Delivery/pkg/service/restaurant"
 	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -19,14 +18,13 @@ func (s *Restaurant) addMenu(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
-	restroService := restro.NewRestaurantService(s.Serve.Engine(), s.Environment)
-	menuObject, err := restroService.AddMenu(ctx, &menuItem)
+	menuObject, err := s.service.AddMenu(ctx, &menuItem)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	} else {
 		// Update Photo from UnSplash
-		restroService.UpdateMenuPhoto(ctx, menuObject)
+		s.service.UpdateMenuPhoto(ctx, menuObject)
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"message": "New Menu Added!"})
@@ -42,8 +40,7 @@ func (s *Restaurant) listMenus(c *gin.Context) {
 		return
 	}
 
-	restroService := restro.NewRestaurantService(s.Serve.Engine(), s.Environment)
-	results, err := restroService.ListMenus(ctx, restaurantId)
+	results, err := s.service.ListMenus(ctx, restaurantId)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -70,8 +67,7 @@ func (s *Restaurant) deleteMenu(c *gin.Context) {
 		return
 	}
 
-	restroService := restro.NewRestaurantService(s.Serve.Engine(), s.Environment)
-	_, err = restroService.DeleteMenu(ctx, menuId, restaurantId)
+	_, err = s.service.DeleteMenu(ctx, menuId, restaurantId)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

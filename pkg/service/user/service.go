@@ -5,9 +5,10 @@ import (
 )
 
 type UsrService struct {
-	db database.Database
+	db  database.Database
+	env string
 }
 
-func NewUserService(db database.Database) *UsrService {
-	return &UsrService{db: db}
+func NewUserService(db database.Database, env string) *UsrService {
+	return &UsrService{db, env}
 }

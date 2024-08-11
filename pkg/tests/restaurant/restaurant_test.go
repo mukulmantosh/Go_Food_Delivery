@@ -3,6 +3,7 @@ package restaurant
 import (
 	"Go_Food_Delivery/pkg/handler"
 	"Go_Food_Delivery/pkg/handler/restaurant"
+	restro "Go_Food_Delivery/pkg/service/restaurant"
 	"Go_Food_Delivery/pkg/tests"
 	"encoding/json"
 	"fmt"
@@ -23,7 +24,9 @@ func TestRestaurant(t *testing.T) {
 	testServer := handler.NewServer(testDB)
 	AppEnv := os.Getenv("APP_ENV")
 
-	restaurant.NewRestaurant(testServer, "/restaurant", AppEnv)
+	// Restaurant
+	restaurantService := restro.NewRestaurantService(testDB, AppEnv)
+	restaurant.NewRestaurant(testServer, "/restaurant", restaurantService)
 
 	var RestaurantResponseID int64
 	name := faker.Name()

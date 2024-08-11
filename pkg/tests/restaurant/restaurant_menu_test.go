@@ -3,6 +3,7 @@ package restaurant
 import (
 	"Go_Food_Delivery/pkg/handler"
 	"Go_Food_Delivery/pkg/handler/restaurant"
+	restro "Go_Food_Delivery/pkg/service/restaurant"
 	"Go_Food_Delivery/pkg/tests"
 	"bytes"
 	"encoding/json"
@@ -23,7 +24,10 @@ func TestRestaurantMenu(t *testing.T) {
 	testDB := tests.Setup()
 	AppEnv := os.Getenv("APP_ENV")
 	testServer := handler.NewServer(testDB)
-	restaurant.NewRestaurant(testServer, "/restaurant", AppEnv)
+
+	// Restaurant
+	restaurantService := restro.NewRestaurantService(testDB, AppEnv)
+	restaurant.NewRestaurant(testServer, "/restaurant", restaurantService)
 
 	var RestaurantResponseID int64
 	var RestaurantMenuID int64
