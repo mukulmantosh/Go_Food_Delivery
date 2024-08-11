@@ -77,4 +77,8 @@ func TestDatabase(t *testing.T) {
 	if dbTest.HealthCheck() != true {
 		t.Fatalf("database health check failed")
 	}
+	if err := dbTest.Migrate(); err != nil {
+		t.Fatalf("Error migrating database: %s", err)
+	}
+
 }
