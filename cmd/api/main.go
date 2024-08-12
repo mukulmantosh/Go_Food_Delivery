@@ -1,12 +1,16 @@
 package main
 
 import (
+	"Go_Food_Delivery/cmd/api/middleware"
 	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/handler"
 	"Go_Food_Delivery/pkg/handler/restaurant"
+	revw "Go_Food_Delivery/pkg/handler/review"
 	"Go_Food_Delivery/pkg/handler/user"
 	restro "Go_Food_Delivery/pkg/service/restaurant"
+	"Go_Food_Delivery/pkg/service/review"
 	usr "Go_Food_Delivery/pkg/service/user"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -28,6 +32,9 @@ func main() {
 
 	s := handler.NewServer(db)
 
+	// Middlewares List
+	middlewares := []gin.HandlerFunc{middleware.AuthMiddleware()}
+
 	// User
 	userService := usr.NewUserService(db, env)
 	user.NewUserHandler(s, "/user", userService)
@@ -35,6 +42,10 @@ func main() {
 	// Restaurant
 	restaurantService := restro.NewRestaurantService(db, env)
 	restaurant.NewRestaurantHandler(s, "/restaurant", restaurantService)
+
+	// Reviews
+	reviewService := review.NewReviewService(db, env)
+	revw.NewReviewProtectedHandler(s, "/review", reviewService, middlewares)
 
 	log.Fatal(s.Run())
 

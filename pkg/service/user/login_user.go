@@ -1,6 +1,7 @@
 package user
 
 import (
+	"Go_Food_Delivery/cmd/api/middleware"
 	"Go_Food_Delivery/pkg/database/models/user"
 	"context"
 	"errors"
@@ -10,14 +11,9 @@ import (
 	"time"
 )
 
-type Claims struct {
-	UserID int64 `json:"user_id"`
-	jwt.RegisteredClaims
-}
-
 func (usrSrv *UsrService) Login(ctx context.Context, userID int64) (string, error) {
 
-	claims := Claims{UserID: userID,
+	claims := middleware.UserClaims{UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * time.Duration(1))),
