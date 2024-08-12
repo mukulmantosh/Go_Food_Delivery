@@ -11,13 +11,13 @@ import (
 )
 
 type Claims struct {
-	Email string `json:"email"`
+	UserID int64 `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
-func (usrSrv *UsrService) Login(ctx context.Context, user *user.LoginUser) (string, error) {
+func (usrSrv *UsrService) Login(ctx context.Context, userID int64) (string, error) {
 
-	claims := Claims{Email: user.Email,
+	claims := Claims{UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * time.Duration(1))),
@@ -28,13 +28,27 @@ func (usrSrv *UsrService) Login(ctx context.Context, user *user.LoginUser) (stri
 	return token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 }
 
-func (usrSrv *UsrService) UserExist(ctx context.Context, email string) (bool, error) {
+func (usrSrv *UsrService) UserExist(ctx context.Context, email string, recordRequired bool) (bool, int64, error) {
 	count, err := usrSrv.db.Count(ctx, "users", "COUNT(*)", "email", email)
 	if err != nil {
 		slog.Info("UserService.UserExist::Error %v", err)
-		return false, err
+		return false, 0, err
 	}
-	return count > 0, nil
+	if count == 0 {
+		return false, 0, nil
+	}
+
+	if recordRequired == true {
+		// Fetch User Detail
+		var accountInfo user.User
+		err = usrSrv.db.Select(ctx, &accountInfo, "email", email)
+		if err != nil {
+			return false, 0, err
+		}
+		return true, accountInfo.ID, nil
+	}
+
+	return true, 0, nil
 }
 
 func (usrSrv *UsrService) ValidatePassword(ctx context.Context, userInput *user.LoginUser) (bool, error) {
