@@ -2,6 +2,7 @@ package database
 
 import (
 	"Go_Food_Delivery/pkg/database/models/restaurant"
+	"Go_Food_Delivery/pkg/database/models/review"
 	"Go_Food_Delivery/pkg/database/models/user"
 	"context"
 	"database/sql"
@@ -163,10 +164,11 @@ func (d *DB) Migrate() error {
 		(*user.User)(nil),
 		(*restaurant.Restaurant)(nil),
 		(*restaurant.MenuItem)(nil),
+		(*review.Review)(nil),
 	}
 
 	for _, model := range models {
-		if _, err := d.db.NewCreateTable().Model(model).IfNotExists().Exec(ctx); err != nil {
+		if _, err := d.db.NewCreateTable().Model(model).WithForeignKeys().IfNotExists().Exec(ctx); err != nil {
 			return err
 		}
 	}
