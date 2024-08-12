@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func (s *Restaurant) addRestaurant(c *gin.Context) {
+func (s *RestaurantHandler) addRestaurant(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 	_ = ctx
@@ -51,7 +51,7 @@ func (s *Restaurant) addRestaurant(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Restaurant created successfully"})
 }
 
-func (s *Restaurant) listRestaurants(c *gin.Context) {
+func (s *RestaurantHandler) listRestaurants(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 
@@ -63,7 +63,7 @@ func (s *Restaurant) listRestaurants(c *gin.Context) {
 	c.JSON(http.StatusOK, results)
 }
 
-func (s *Restaurant) deleteRestaurant(c *gin.Context) {
+func (s *RestaurantHandler) deleteRestaurant(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 

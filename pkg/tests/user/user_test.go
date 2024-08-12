@@ -27,7 +27,7 @@ func TestAddUser(t *testing.T) {
 
 	// User
 	userService := usr.NewUserService(testDB, AppEnv)
-	user.NewRegister(testServer, "/user", userService)
+	user.NewUserHandler(testServer, "/user", userService)
 
 	type FakeUser struct {
 		User     string `json:"user" faker:"name"`

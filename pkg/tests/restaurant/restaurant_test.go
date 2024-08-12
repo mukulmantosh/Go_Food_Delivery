@@ -26,7 +26,7 @@ func TestRestaurant(t *testing.T) {
 
 	// Restaurant
 	restaurantService := restro.NewRestaurantService(testDB, AppEnv)
-	restaurant.NewRestaurant(testServer, "/restaurant", restaurantService)
+	restaurant.NewRestaurantHandler(testServer, "/restaurant", restaurantService)
 
 	var RestaurantResponseID int64
 	name := faker.Name()

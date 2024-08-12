@@ -19,7 +19,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	AppEnv := os.Getenv("APP_ENV")
+	env := os.Getenv("APP_ENV")
 	db := database.New()
 	// Create Tables
 	if err := db.Migrate(); err != nil {
@@ -29,12 +29,12 @@ func main() {
 	s := handler.NewServer(db)
 
 	// User
-	userService := usr.NewUserService(db, AppEnv)
-	user.NewRegister(s, "/user", userService)
+	userService := usr.NewUserService(db, env)
+	user.NewUserHandler(s, "/user", userService)
 
 	// Restaurant
-	restaurantService := restro.NewRestaurantService(db, AppEnv)
-	restaurant.NewRestaurant(s, "/restaurant", restaurantService)
+	restaurantService := restro.NewRestaurantService(db, env)
+	restaurant.NewRestaurantHandler(s, "/restaurant", restaurantService)
 
 	log.Fatal(s.Run())
 

@@ -6,23 +6,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Restaurant struct {
+type RestaurantHandler struct {
 	Serve   *handler.Server
 	group   string
 	router  *gin.RouterGroup
 	service *restaurant.RestaurantService
 }
 
-func NewRestaurant(s *handler.Server, groupName string, service *restaurant.RestaurantService) *Restaurant {
+func NewRestaurantHandler(s *handler.Server, groupName string, service *restaurant.RestaurantService) {
 
-	restaurantService := &Restaurant{
+	restroHandler := &RestaurantHandler{
 		s,
 		groupName,
 		&gin.RouterGroup{},
 		service,
 	}
 
-	restaurantService.router = restaurantService.registerGroup()
-	restaurantService.routes()
-	return restaurantService
+	restroHandler.router = restroHandler.registerGroup()
+	restroHandler.routes()
 }

@@ -6,23 +6,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Register struct {
+type UserHandler struct {
 	Serve   *handler.Server
 	group   string
 	router  *gin.RouterGroup
 	service *user.UsrService
 }
 
-func NewRegister(s *handler.Server, groupName string, service *user.UsrService) *Register {
+func NewUserHandler(s *handler.Server, groupName string, service *user.UsrService) {
 
-	registrationService := &Register{
+	usrHandler := &UserHandler{
 		s,
 		groupName,
 		&gin.RouterGroup{},
 		service,
 	}
-
-	registrationService.router = registrationService.registerGroup()
-	registrationService.routes()
-	return registrationService
+	usrHandler.router = usrHandler.registerGroup()
+	usrHandler.routes()
 }

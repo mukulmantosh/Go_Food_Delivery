@@ -5,11 +5,11 @@ import (
 	"net/http"
 )
 
-func (s *Restaurant) registerGroup() *gin.RouterGroup {
+func (s *RestaurantHandler) registerGroup() *gin.RouterGroup {
 	return s.Serve.Gin().Group(s.group)
 }
 
-func (s *Restaurant) routes() http.Handler {
+func (s *RestaurantHandler) routes() http.Handler {
 	s.router.POST("/", s.addRestaurant)
 	s.router.GET("/", s.listRestaurants)
 	s.router.DELETE("/:id", s.deleteRestaurant)

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (s *Restaurant) addMenu(c *gin.Context) {
+func (s *RestaurantHandler) addMenu(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 
@@ -30,7 +30,7 @@ func (s *Restaurant) addMenu(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "New Menu Added!"})
 }
 
-func (s *Restaurant) listMenus(c *gin.Context) {
+func (s *RestaurantHandler) listMenus(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 
@@ -52,7 +52,7 @@ func (s *Restaurant) listMenus(c *gin.Context) {
 	c.JSON(http.StatusOK, results)
 }
 
-func (s *Restaurant) deleteMenu(c *gin.Context) {
+func (s *RestaurantHandler) deleteMenu(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
 
