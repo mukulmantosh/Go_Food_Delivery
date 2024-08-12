@@ -11,6 +11,7 @@ import (
 	"Go_Food_Delivery/pkg/service/review"
 	usr "Go_Food_Delivery/pkg/service/user"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -32,6 +33,9 @@ func main() {
 
 	s := handler.NewServer(db)
 
+	// Initialize Validator
+	validate := validator.New()
+
 	// Middlewares List
 	middlewares := []gin.HandlerFunc{middleware.AuthMiddleware()}
 
@@ -45,7 +49,7 @@ func main() {
 
 	// Reviews
 	reviewService := review.NewReviewService(db, env)
-	revw.NewReviewProtectedHandler(s, "/review", reviewService, middlewares)
+	revw.NewReviewProtectedHandler(s, "/review", reviewService, middlewares, validate)
 
 	log.Fatal(s.Run())
 
