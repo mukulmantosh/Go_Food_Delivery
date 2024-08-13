@@ -46,3 +46,25 @@ func (s *ReviewProtectedHandler) addReview(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Review Added!"})
 
 }
+
+func (s *ReviewProtectedHandler) listReviews(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	restaurantId, err := strconv.ParseInt(c.Param("restaurant_id"), 10, 64)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Invalid RestaurantID"})
+		return
+	}
+
+	results, err := s.service.ListReviews(ctx, restaurantId)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	if len(results) == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No results found"})
+		return
+	}
+	c.JSON(http.StatusOK, results)
+}
