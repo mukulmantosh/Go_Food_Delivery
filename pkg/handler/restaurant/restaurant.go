@@ -28,7 +28,7 @@ func (s *RestaurantHandler) addRestaurant(c *gin.Context) {
 	// Generate a new file name
 	newFileName := generateFileName(originalFileName)
 
-	_, err = s.Serve.Storage().Upload(newFileName, file)
+	_, err = s.Serve.Storage.Upload(newFileName, file)
 	if err != nil {
 		slog.Error("Error", "addRestaurant", err.Error())
 	}

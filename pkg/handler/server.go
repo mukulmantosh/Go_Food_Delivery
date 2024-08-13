@@ -10,21 +10,9 @@ import (
 )
 
 type Server struct {
-	gin     *gin.Engine
+	Gin     *gin.Engine
 	db      database.Database
-	storage storage.ImageStorage
-}
-
-func (server *Server) Storage() storage.ImageStorage {
-	return server.storage
-}
-
-func (server *Server) Engine() database.Database {
-	return server.db
-}
-
-func (server *Server) Gin() *gin.Engine {
-	return server.gin
+	Storage storage.ImageStorage
 }
 
 func NewServer(db database.Database) *Server {
@@ -44,12 +32,12 @@ func NewServer(db database.Database) *Server {
 	}
 
 	return &Server{
-		gin:     ginEngine,
+		Gin:     ginEngine,
 		db:      db,
-		storage: storage.CreateImageStorage(os.Getenv("STORAGE_TYPE")),
+		Storage: storage.CreateImageStorage(os.Getenv("STORAGE_TYPE")),
 	}
 }
 
 func (server *Server) Run() error {
-	return server.gin.Run(":8080")
+	return server.Gin.Run(":8080")
 }

@@ -6,10 +6,10 @@ import (
 )
 
 func (s *ReviewProtectedHandler) registerGroup(middleware ...gin.HandlerFunc) gin.IRoutes {
-	return s.serve.Gin().Group(s.group).Use(middleware...)
+	return s.serve.Gin.Group(s.group).Use(middleware...)
 }
 
 func (s *ReviewProtectedHandler) routes() http.Handler {
 	s.router.POST("/:restaurant_id", s.addReview)
-	return s.serve.Gin()
+	return s.serve.Gin
 }

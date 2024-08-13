@@ -66,7 +66,7 @@ func TestRestaurantMenu(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodPost, "/restaurant/", body)
 		req.Header.Set("Content-Type", contentType)
 		w := httptest.NewRecorder()
-		testServer.Gin().ServeHTTP(w, req)
+		testServer.Gin.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusCreated, w.Code)
 
 	})
@@ -89,7 +89,7 @@ func TestRestaurantMenu(t *testing.T) {
 		req.Header.Set("Content-Type", "application/Json")
 		w := httptest.NewRecorder()
 
-		testServer.Gin().ServeHTTP(w, req)
+		testServer.Gin.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 
 		var restaurants []RestaurantResponse
@@ -119,7 +119,7 @@ func TestRestaurantMenu(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodPost, "/restaurant/menu", bytes.NewBuffer(payload))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
-		testServer.Gin().ServeHTTP(w, req)
+		testServer.Gin.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusCreated, w.Code)
 
 	})
@@ -129,7 +129,7 @@ func TestRestaurantMenu(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodGet, url, nil)
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
-		testServer.Gin().ServeHTTP(w, req)
+		testServer.Gin.ServeHTTP(w, req)
 
 		var menuItems []MenuItem
 		err := json.Unmarshal(w.Body.Bytes(), &menuItems)
@@ -149,7 +149,7 @@ func TestRestaurantMenu(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodDelete, url, nil)
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
-		testServer.Gin().ServeHTTP(w, req)
+		testServer.Gin.ServeHTTP(w, req)
 
 		assert.Equal(t, http.StatusNoContent, w.Code)
 

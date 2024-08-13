@@ -52,7 +52,7 @@ func TestAddUser(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodPost, "/user/", strings.NewReader(string(payload)))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
-		testServer.Gin().ServeHTTP(w, req)
+		testServer.Gin.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusCreated, w.Code)
 
 	})
@@ -67,7 +67,7 @@ func TestAddUser(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodPost, "/user/login", strings.NewReader(string(payload)))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
-		testServer.Gin().ServeHTTP(w, req)
+		testServer.Gin.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 
 	})
