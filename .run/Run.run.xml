@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run" type="TaskRunConfiguration" factoryName="TaskRunConfiguration">
+    <taskfile taskPath="C:\ProgramData\chocolatey\bin\task.exe" filename="C:\Users\win10\GolandProjects\Go_Food_Delivery\Taskfile.yml" task="run" workingDirectory="" arguments="" pty="false">
+      <envs />
+      <vars />
+    </taskfile>
+    <method v="2" />
+  </configuration>
+</component>
