@@ -1,14 +1,19 @@
 version: '3'
 tasks:
   build:
-    desc: Build App
+    desc: Build Application
     cmds:
       - go build -o food_delivery ./cmd/api
   run:
-    desc: Run App
+    desc: Run Application
     cmds:
       - go run ./cmd/api
   test:
     desc: Run Tests
     cmds:
       - go test -v ./...
+  all:
+    desc: Build & Test
+    deps:
+      - build
+      - test
