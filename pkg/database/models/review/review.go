@@ -12,9 +12,9 @@ import (
 type Review struct {
 	bun.BaseModel `bun:"table:reviews"`
 
-	ReviewID     int    `bun:"review_id,pk,autoincrement" json:"review_id"`
-	UserID       int    `bun:"user_id" json:"user_id"`
-	RestaurantID int    `bun:"restaurant_id" json:"restaurant_id"`
+	ReviewID     int64  `bun:"review_id,pk,autoincrement" json:"review_id"`
+	UserID       int64  `bun:"user_id" json:"user_id"`
+	RestaurantID int64  `bun:"restaurant_id" json:"restaurant_id"`
 	Rating       int    `bun:"rating"`
 	Comment      string `bun:"comment"`
 	utils.Timestamp
