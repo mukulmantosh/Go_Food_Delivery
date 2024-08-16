@@ -86,7 +86,7 @@ func TestRestaurantMenu(t *testing.T) {
 		}
 
 		req, _ := http.NewRequest(http.MethodGet, "/restaurant/", nil)
-		req.Header.Set("Content-Type", "application/Json")
+		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 
 		testServer.Gin.ServeHTTP(w, req)

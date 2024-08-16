@@ -46,6 +46,7 @@ func TestReview(t *testing.T) {
 		Email    string `json:"email" faker:"email"`
 		Password string `json:"password" faker:"password"`
 	}
+	var ReviewResponseID int64
 
 	var customUser FakeUser
 	var user userModel.User
@@ -112,25 +113,42 @@ func TestReview(t *testing.T) {
 	})
 
 	t.Run("Review::List", func(t *testing.T) {
-		var reviewParam review.ReviewParams
-		reviewParam.Comment = faker.Word()
-		reviewParam.Rating = 4
-		payload, err := json.Marshal(&reviewParam)
-		if err != nil {
-			t.Fatal(err)
-		}
+		//[{"review_id":1,"user_id":1,"restaurant_id":1,"Rating":4,"Comment":"itaque","CreatedAt":"2024-08-16T08:44:15Z","UpdatedAt":"2024-08-16T08:44:15Z"}]
 
-		req, _ := http.NewRequest(http.MethodGet,
-			fmt.Sprintf("/review/%d", restaurantId),
-			strings.NewReader(string(payload)))
+		type ReviewResponse struct {
+			ReviewID     int64  `json:"review_id"`
+			UserID       int64  `json:"user_id"`
+			RestaurantID int64  `json:"restaurant_id"`
+			Rating       int    `json:"rating"`
+			Comment      string `json:"comment"`
+		}
+		req, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/review/%d", restaurantId), nil)
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", Token)
 		w := httptest.NewRecorder()
 		testServer.Gin.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 
+		var allReviews []ReviewResponse
+		err := json.Unmarshal(w.Body.Bytes(), &allReviews)
+		if err != nil {
+			t.Fatalf("Failed to decode response body: %v", err)
+		}
+
+		ReviewResponseID = allReviews[0].ReviewID
+
 	})
 
-	//tests.Teardown(testDB)
+	t.Run("Review::Delete", func(t *testing.T) {
+		url := fmt.Sprintf("/review/%d", ReviewResponseID)
+		req, _ := http.NewRequest(http.MethodDelete, url, nil)
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", Token)
+		w := httptest.NewRecorder()
+		testServer.Gin.ServeHTTP(w, req)
+		assert.Equal(t, http.StatusNoContent, w.Code)
+	})
+
+	tests.Teardown(testDB)
 
 }

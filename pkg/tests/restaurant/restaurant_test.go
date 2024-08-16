@@ -94,7 +94,7 @@ func TestRestaurant(t *testing.T) {
 	t.Run("Restaurant::Delete", func(t *testing.T) {
 		url := fmt.Sprintf("/restaurant/%d", RestaurantResponseID)
 		req, _ := http.NewRequest(http.MethodDelete, url, nil)
-		req.Header.Set("Content-Type", "application/Json")
+		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 		testServer.Gin.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusNoContent, w.Code)

@@ -12,6 +12,7 @@ func (s *ReviewProtectedHandler) registerGroup(middleware ...gin.HandlerFunc) gi
 func (s *ReviewProtectedHandler) routes() http.Handler {
 	s.router.POST("/:restaurant_id", s.addReview)
 	s.router.GET("/:restaurant_id", s.listReviews)
+	s.router.DELETE("/:review_id", s.deleteReview)
 
 	return s.serve.Gin
 }

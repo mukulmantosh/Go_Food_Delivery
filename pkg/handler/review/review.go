@@ -68,3 +68,23 @@ func (s *ReviewProtectedHandler) listReviews(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, results)
 }
+
+func (s *ReviewProtectedHandler) deleteReview(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	reviewId := c.Param("review_id")
+	userID := c.GetInt64("userID")
+
+	// Convert to integer
+	reviewID, _ := strconv.ParseInt(reviewId, 10, 64)
+
+	_, err := s.service.DeleteReview(ctx, reviewID, userID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+
+}
