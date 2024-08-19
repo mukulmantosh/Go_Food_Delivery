@@ -33,23 +33,35 @@ func (s *RestaurantHandler) addMenu(c *gin.Context) {
 func (s *RestaurantHandler) listMenus(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
+	restaurantId := c.Query("restaurant_id")
+	if restaurantId == "" {
+		results, err := s.service.ListAllMenus(ctx)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, results)
+		return
 
-	restaurantId, err := strconv.ParseInt(c.Param("restaurant_id"), 10, 64)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Invalid RestaurantID"})
-		return
-	}
+	} else {
+		restaurantID, err := strconv.ParseInt(restaurantId, 10, 64)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Invalid RestaurantID"})
+			return
+		}
+		results, err := s.service.ListMenus(ctx, restaurantID)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
 
-	results, err := s.service.ListMenus(ctx, restaurantId)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		if len(results) == 0 {
+			c.JSON(http.StatusNotFound, gin.H{"error": "No results found"})
+			return
+		}
+		c.JSON(http.StatusOK, results)
 		return
 	}
-	if len(results) == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"error": "No results found"})
-		return
-	}
-	c.JSON(http.StatusOK, results)
 }
 
 func (s *RestaurantHandler) deleteMenu(c *gin.Context) {
