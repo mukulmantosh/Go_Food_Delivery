@@ -3,6 +3,7 @@ package handler
 import (
 	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/storage"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	sloggin "github.com/samber/slog-gin"
 	"log/slog"
@@ -20,9 +21,18 @@ func NewServer(db database.Database) *Server {
 
 	ginEngine := gin.New()
 
-	// Setting Logger & MultipartMemory
+	// CORS configuration
+	corsConfig := cors.Config{
+		AllowOrigins: []string{"*"},                            // List of allowed origins
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"}, // List of allowed methods
+
+		AllowCredentials: true,
+	}
+
+	// Setting Logger, CORS & MultipartMemory
 	ginEngine.Use(sloggin.New(logger))
 	ginEngine.Use(gin.Recovery())
+	ginEngine.Use(cors.New(corsConfig))
 	ginEngine.MaxMultipartMemory = 8 << 20 // 8 MB
 
 	localStoragePath := os.Getenv("LOCAL_STORAGE_PATH")

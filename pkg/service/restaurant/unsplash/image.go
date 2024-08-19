@@ -6,13 +6,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 )
 
 func GetUnSplashImageURL(menuItem string) string {
-	url := "https://api.unsplash.com/search/photos/?page=1&query=" + menuItem + "&w=400&h=400"
 
-	req, err := http.NewRequest("GET", url, nil)
+	imageUrl := "https://api.unsplash.com/search/photos/?page=1&query=" + url.QueryEscape(menuItem) + "&w=400&h=400"
+	req, err := http.NewRequest("GET", imageUrl, nil)
 	if err != nil {
 		log.Fatalf("Failed to create request: %v", err)
 	}
