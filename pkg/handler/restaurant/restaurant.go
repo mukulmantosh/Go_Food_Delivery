@@ -63,6 +63,20 @@ func (s *RestaurantHandler) listRestaurants(c *gin.Context) {
 	c.JSON(http.StatusOK, results)
 }
 
+func (s *RestaurantHandler) listRestaurantById(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+	restaurantId := c.Param("id")
+	restaurantID, _ := strconv.ParseInt(restaurantId, 10, 64)
+
+	result, err := s.service.ListRestaurantById(ctx, restaurantID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, result)
+}
+
 func (s *RestaurantHandler) deleteRestaurant(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 	defer cancel()
