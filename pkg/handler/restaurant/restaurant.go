@@ -60,6 +60,10 @@ func (s *RestaurantHandler) listRestaurants(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
+	if results == nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "No restaurants found"})
+		return
+	}
 	c.JSON(http.StatusOK, results)
 }
 

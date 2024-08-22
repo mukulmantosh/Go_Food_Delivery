@@ -43,10 +43,15 @@ func (restSrv *RestaurantService) UpdateMenuPhoto(ctx context.Context, menu *res
 		defer ImageUpdateLock.Unlock()
 		setFilter := database.Filter{"photo": imageFileLocalPath}
 		whereFilter := database.Filter{"menu_id": menu.MenuID}
-
-		_, err := restSrv.db.Update(context.Background(), "menu_item", setFilter, whereFilter)
-		if err != nil {
-			slog.Info("UnSplash DB Image Update", "error", err)
+		select {
+		case <-ctx.Done():
+			slog.Error("UnSplash Worker::", "error", ctx.Err().Error())
+			return
+		default:
+			_, err := restSrv.db.Update(context.Background(), "menu_item", setFilter, whereFilter)
+			if err != nil {
+				slog.Info("UnSplash DB Image Update", "error", err)
+			}
 		}
 	}()
 }
