@@ -23,9 +23,9 @@ func NewServer(db database.Database) *Server {
 
 	// CORS configuration
 	corsConfig := cors.Config{
-		AllowOrigins: []string{"*"},                            // List of allowed origins
-		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"}, // List of allowed methods
-
+		AllowOrigins:     []string{"*"},                                       // List of allowed origins
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},            // List of allowed methods
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"}, // Allow the necessary headers
 		AllowCredentials: true,
 	}
 
