@@ -6,11 +6,11 @@ import (
 	"errors"
 )
 
-func ValidateAccount(login func(ctx context.Context, userID int64) (string, error),
-	accountExists func(ctx context.Context, email string, recordRequired bool) (bool, int64, error),
+func ValidateAccount(login func(ctx context.Context, userID int64, userName string) (string, error),
+	accountExists func(ctx context.Context, email string, recordRequired bool) (bool, int64, string, error),
 	validatePassword func(ctx context.Context, user *user.LoginUser) (bool, error)) func(ctx context.Context, user *user.LoginUser) (string, error) {
 	return func(ctx context.Context, user *user.LoginUser) (string, error) {
-		exists, userDetail, err := accountExists(ctx, user.Email, true)
+		exists, userId, name, err := accountExists(ctx, user.Email, true)
 		if err != nil {
 			return "", err
 		}
@@ -23,6 +23,6 @@ func ValidateAccount(login func(ctx context.Context, userID int64) (string, erro
 			return "", err
 		}
 
-		return login(ctx, userDetail)
+		return login(ctx, userId, name)
 	}
 }

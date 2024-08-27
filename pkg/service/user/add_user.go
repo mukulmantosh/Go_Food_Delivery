@@ -7,7 +7,7 @@ import (
 )
 
 func (usrSrv *UsrService) Add(ctx context.Context, user *user.User) (bool, error) {
-	accountExists, _, _ := usrSrv.UserExist(ctx, user.Email, false)
+	accountExists, _, _, _ := usrSrv.UserExist(ctx, user.Email, false)
 	if accountExists {
 		return false, errors.New("the user you are trying to register already exists")
 	} else {

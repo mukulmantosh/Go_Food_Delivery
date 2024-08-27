@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-func (usrSrv *UsrService) Login(ctx context.Context, userID int64) (string, error) {
+func (usrSrv *UsrService) Login(_ context.Context, userID int64, Name string) (string, error) {
 
-	claims := middleware.UserClaims{UserID: userID,
+	claims := middleware.UserClaims{UserID: userID, Name: Name,
 		RegisteredClaims: jwt.RegisteredClaims{
 
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * time.Duration(1))),
@@ -24,14 +24,14 @@ func (usrSrv *UsrService) Login(ctx context.Context, userID int64) (string, erro
 	return token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 }
 
-func (usrSrv *UsrService) UserExist(ctx context.Context, email string, recordRequired bool) (bool, int64, error) {
+func (usrSrv *UsrService) UserExist(ctx context.Context, email string, recordRequired bool) (bool, int64, string, error) {
 	count, err := usrSrv.db.Count(ctx, "users", "COUNT(*)", "email", email)
 	if err != nil {
 		slog.Info("UserService.UserExist::Error %v", err)
-		return false, 0, err
+		return false, 0, "", err
 	}
 	if count == 0 {
-		return false, 0, nil
+		return false, 0, "", nil
 	}
 
 	if recordRequired == true {
@@ -39,12 +39,12 @@ func (usrSrv *UsrService) UserExist(ctx context.Context, email string, recordReq
 		var accountInfo user.User
 		err = usrSrv.db.Select(ctx, &accountInfo, "email", email)
 		if err != nil {
-			return false, 0, err
+			return false, 0, "", err
 		}
-		return true, accountInfo.ID, nil
+		return true, accountInfo.ID, accountInfo.Name, nil
 	}
 
-	return true, 0, nil
+	return true, 0, "", nil
 }
 
 func (usrSrv *UsrService) ValidatePassword(ctx context.Context, userInput *user.LoginUser) (bool, error) {
