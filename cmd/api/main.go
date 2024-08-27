@@ -41,7 +41,7 @@ func main() {
 
 	// User
 	userService := usr.NewUserService(db, env)
-	user.NewUserHandler(s, "/user", userService)
+	user.NewUserHandler(s, "/user", userService, validate)
 
 	// Restaurant
 	restaurantService := restro.NewRestaurantService(db, env)

@@ -20,6 +20,12 @@ func (s *UserHandler) addUser(c *gin.Context) {
 		return
 	}
 
+	if err := s.validate.Struct(user); err != nil {
+		validationError := userModel.UserValidationError(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": validationError})
+		return
+	}
+
 	_, err := s.service.Add(ctx, &user)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
