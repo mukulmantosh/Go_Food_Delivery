@@ -8,7 +8,8 @@ import (
 func (cartSrv *CartService) ListItems(ctx context.Context, cartId int64) (*[]cart.CartItems, error) {
 	var cartItems []cart.CartItems
 
-	err := cartSrv.db.Select(ctx, &cartItems, "cart_item_id", 1)
+	err := cartSrv.db.Select(ctx, &cartItems, "cart_id", cartId)
+
 	if err != nil {
 		return nil, err
 	}

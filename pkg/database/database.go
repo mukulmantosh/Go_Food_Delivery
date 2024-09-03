@@ -27,6 +27,7 @@ type Database interface {
 	Delete(ctx context.Context, tableName string, filter Filter) (sql.Result, error)
 	Select(ctx context.Context, model any, columnName string, parameter any) error
 	SelectAll(ctx context.Context, tableName string, model any) error
+	Raw(ctx context.Context, model any, query string, args ...interface{}) error
 	Update(ctx context.Context, tableName string, Set Filter, Condition Filter) (sql.Result, error)
 	Count(ctx context.Context, tableName string, ColumnExpression string, columnName string, parameter any) (int64, error)
 	Migrate() error
@@ -74,6 +75,13 @@ func (d *DB) Select(ctx context.Context, model any, columnName string, parameter
 
 func (d *DB) SelectAll(ctx context.Context, tableName string, model any) error {
 	if err := d.db.NewSelect().Table(tableName).Scan(ctx, model); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *DB) Raw(ctx context.Context, model any, query string, args ...interface{}) error {
+	if err := d.db.NewRaw(query, args...).Scan(ctx, model); err != nil {
 		return err
 	}
 	return nil
