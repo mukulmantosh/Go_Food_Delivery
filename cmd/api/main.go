@@ -4,9 +4,11 @@ import (
 	"Go_Food_Delivery/cmd/api/middleware"
 	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/handler"
+	crt "Go_Food_Delivery/pkg/handler/cart"
 	"Go_Food_Delivery/pkg/handler/restaurant"
 	revw "Go_Food_Delivery/pkg/handler/review"
 	"Go_Food_Delivery/pkg/handler/user"
+	"Go_Food_Delivery/pkg/service/cart"
 	restro "Go_Food_Delivery/pkg/service/restaurant"
 	"Go_Food_Delivery/pkg/service/review"
 	usr "Go_Food_Delivery/pkg/service/user"
@@ -50,6 +52,10 @@ func main() {
 	// Reviews
 	reviewService := review.NewReviewService(db, env)
 	revw.NewReviewProtectedHandler(s, "/review", reviewService, middlewares, validate)
+
+	// Cart
+	cartService := cart.NewCartService(db, env)
+	crt.NewCartHandler(s, "/cart", cartService, middlewares, validate)
 
 	log.Fatal(s.Run())
 

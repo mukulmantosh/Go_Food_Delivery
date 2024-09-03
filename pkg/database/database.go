@@ -1,6 +1,7 @@
 package database
 
 import (
+	"Go_Food_Delivery/pkg/database/models/cart"
 	"Go_Food_Delivery/pkg/database/models/order"
 	"Go_Food_Delivery/pkg/database/models/restaurant"
 	"Go_Food_Delivery/pkg/database/models/review"
@@ -168,6 +169,8 @@ func (d *DB) Migrate() error {
 		(*review.Review)(nil),
 		(*order.Order)(nil),
 		(*order.OrderItems)(nil),
+		(*cart.Cart)(nil),
+		(*cart.CartItems)(nil),
 	}
 
 	for _, model := range models {
