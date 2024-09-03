@@ -17,14 +17,20 @@ type Cart struct {
 
 type CartItems struct {
 	bun.BaseModel `bun:"table:cart_items"`
-	CartItemID    int64   `bun:",pk,autoincrement" json:"cart_item_id"`
-	CartID        int64   `bun:"cart_id,notnull" json:"cart_id"`
-	ItemID        int64   `bun:"item_id,notnull" json:"item_id"`
-	RestaurantID  int64   `bun:"restaurant_id,notnull" json:"restaurant_id"`
-	Quantity      int64   `bun:"quantity,notnull" json:"quantity"`
-	Price         float64 `bun:"price,notnull" json:"price"`
+	CartItemID    int64 `bun:",pk,autoincrement" json:"cart_item_id"`
+	CartID        int64 `bun:"cart_id,notnull" json:"cart_id"`
+	ItemID        int64 `bun:"item_id,notnull" json:"item_id"`
+	RestaurantID  int64 `bun:"restaurant_id,notnull" json:"restaurant_id"`
+	Quantity      int64 `bun:"quantity,notnull" json:"quantity"`
 	utils.Timestamp
-	Restaurant *restaurant.Restaurant `bun:"rel:belongs-to,join:restaurant_id=restaurant_id"`
-	MenuItem   *restaurant.MenuItem   `bun:"rel:belongs-to,join:item_id=menu_id"`
-	Cart       *Cart                  `bun:"rel:belongs-to,join:cart_id=cart_id"`
+	Restaurant *restaurant.Restaurant `bun:"rel:belongs-to,join:restaurant_id=restaurant_id" json:"-"`
+	MenuItem   *restaurant.MenuItem   `bun:"rel:belongs-to,join:item_id=menu_id" json:"-"`
+	Cart       *Cart                  `bun:"rel:belongs-to,join:cart_id=cart_id" json:"-"`
+}
+
+type CartItemParams struct {
+	CartID       int64 `json:"cart_id"`
+	ItemID       int64 `json:"item_id"`
+	RestaurantID int64 `json:"restaurant_id"`
+	Quantity     int64 `json:"quantity"`
 }
