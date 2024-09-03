@@ -12,7 +12,7 @@ type Cart struct {
 	CartID        int64 `bun:",pk,autoincrement" json:"cart_id"`
 	UserID        int64 `bun:"user_id,notnull" json:"user_id"`
 	utils.Timestamp
-	User *userModel.User `bun:"rel:belongs-to,join:user_id=id"`
+	User *userModel.User `bun:"rel:belongs-to,join:user_id=id" json:"-"`
 }
 
 type CartItems struct {
@@ -24,7 +24,7 @@ type CartItems struct {
 	Quantity      int64 `bun:"quantity,notnull" json:"quantity"`
 	utils.Timestamp
 	Restaurant *restaurant.Restaurant `bun:"rel:belongs-to,join:restaurant_id=restaurant_id" json:"-"`
-	MenuItem   *restaurant.MenuItem   `bun:"rel:belongs-to,join:item_id=menu_id" json:"-"`
+	MenuItem   *restaurant.MenuItem   `bun:"rel:belongs-to,join:item_id=menu_id" json:"menu_item"`
 	Cart       *Cart                  `bun:"rel:belongs-to,join:cart_id=cart_id" json:"-"`
 }
 

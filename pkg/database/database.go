@@ -27,6 +27,7 @@ type Database interface {
 	Delete(ctx context.Context, tableName string, filter Filter) (sql.Result, error)
 	Select(ctx context.Context, model any, columnName string, parameter any) error
 	SelectAll(ctx context.Context, tableName string, model any) error
+	SelectWithRelation(ctx context.Context, model any, relations []string, columnName string, parameter any) error
 	Raw(ctx context.Context, model any, query string, args ...interface{}) error
 	Update(ctx context.Context, tableName string, Set Filter, Condition Filter) (sql.Result, error)
 	Count(ctx context.Context, tableName string, ColumnExpression string, columnName string, parameter any) (int64, error)
@@ -84,6 +85,20 @@ func (d *DB) Raw(ctx context.Context, model any, query string, args ...interface
 	if err := d.db.NewRaw(query, args...).Scan(ctx, model); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (d *DB) SelectWithRelation(ctx context.Context, model any, relations []string, columnName string, parameter any) error {
+	query := d.db.NewSelect().Model(model)
+	for _, relation := range relations {
+		query.Relation(relation)
+	}
+
+	err := query.Where(fmt.Sprintf("%s = ?", columnName), parameter).Scan(ctx)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
