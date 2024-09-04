@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -77,4 +78,21 @@ func (s *CartHandler) getItems(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"items": items})
 	return
+}
+
+func (s *CartHandler) deleteItemFromCart(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	cartItemId := c.Param("id")
+	cartItemID, _ := strconv.ParseInt(cartItemId, 10, 64)
+
+	_, err := s.service.DeleteItem(ctx, cartItemID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+
 }

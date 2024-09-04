@@ -13,4 +13,5 @@ type Cart interface {
 
 type CartItems interface {
 	ListItems(ctx context.Context, cartId int64) (*[]cart.CartItems, error)
+	DeleteItem(ctx context.Context, cartItemId int64) (bool, error)
 }

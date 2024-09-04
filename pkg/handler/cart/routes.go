@@ -12,5 +12,7 @@ func (s *CartHandler) registerGroup(middleware ...gin.HandlerFunc) gin.IRoutes {
 func (s *CartHandler) routes() http.Handler {
 	s.router.POST("/add", s.addToCart)
 	s.router.GET("/list", s.getItems)
+	s.router.DELETE("/remove/:id", s.deleteItemFromCart)
+
 	return s.serve.Gin
 }
