@@ -51,7 +51,7 @@ func (d *DB) Insert(ctx context.Context, model any) (sql.Result, error) {
 }
 
 func (d *DB) Update(ctx context.Context, tableName string, Set Filter, Condition Filter) (sql.Result, error) {
-	result, err := d.db.NewUpdate().Table(tableName).Set(d.whereCondition(Set)).Where(d.whereCondition(Condition)).Exec(ctx)
+	result, err := d.db.NewUpdate().Table(tableName).Set(d.whereCondition(Set, "SET")).Where(d.whereCondition(Condition, "AND")).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (d *DB) Update(ctx context.Context, tableName string, Set Filter, Condition
 }
 
 func (d *DB) Delete(ctx context.Context, tableName string, filter Filter) (sql.Result, error) {
-	result, err := d.db.NewDelete().Table(tableName).Where(d.whereCondition(filter)).Exec(ctx)
+	result, err := d.db.NewDelete().Table(tableName).Where(d.whereCondition(filter, "AND")).Exec(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +112,7 @@ func (d *DB) Count(ctx context.Context, tableName string, ColumnExpression strin
 	return count, nil
 }
 
-func (d *DB) whereCondition(filter Filter) string {
+func (d *DB) whereCondition(filter Filter, ConditionType string) string {
 	var whereClauses []string
 	for key, value := range filter {
 		var formattedValue string
@@ -122,6 +122,8 @@ func (d *DB) whereCondition(filter Filter) string {
 			formattedValue = fmt.Sprintf("'%s'", v)
 		case int64:
 			formattedValue = fmt.Sprintf("%d", v)
+		case float64:
+			formattedValue = fmt.Sprintf("%.2f", v)
 		default:
 			log.Fatal("DB::Query:: Un-handled type for where condition!")
 
@@ -131,9 +133,12 @@ func (d *DB) whereCondition(filter Filter) string {
 
 	var result string
 	if len(whereClauses) > 0 {
-		result = strings.Join(whereClauses, " AND ")
+		if ConditionType == "SET" {
+			result = strings.Join(whereClauses, " , ")
+		} else if ConditionType == "AND" {
+			result = strings.Join(whereClauses, " AND ")
+		}
 	}
-
 	return result
 }
 

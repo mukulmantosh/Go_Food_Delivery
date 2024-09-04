@@ -11,13 +11,11 @@ type Order struct {
 	bun.BaseModel   `bun:"table:orders"`
 	OrderID         int64   `bun:",pk,autoincrement" json:"order_id"`
 	UserID          int64   `bun:"user_id,notnull" json:"user_id"`
-	RestaurantID    int64   `bun:"restaurant_id,notnull" json:"restaurant_id"`
 	OrderStatus     string  `bun:"order_status,notnull" json:"order_status"`
 	TotalAmount     float64 `bun:"total_amount,notnull" json:"total_amount"`
 	DeliveryAddress string  `bun:"delivery_address,notnull" json:"delivery_address"`
 	utils.Timestamp
-	Restaurant *restaurant.Restaurant `bun:"rel:belongs-to,join:restaurant_id=restaurant_id"`
-	User       *userModel.User        `bun:"rel:belongs-to,join:user_id=id"`
+	User *userModel.User `bun:"rel:belongs-to,join:user_id=id"`
 }
 
 type OrderItems struct {
@@ -25,9 +23,11 @@ type OrderItems struct {
 	OrderItemID   int64   `bun:",pk,autoincrement" json:"order_item_id"`
 	OrderID       int64   `bun:"order_id,notnull" json:"order_id"`
 	ItemID        int64   `bun:"item_id,notnull" json:"item_id"`
+	RestaurantID  int64   `bun:"restaurant_id,notnull" json:"restaurant_id"`
 	Quantity      int64   `bun:"quantity,notnull" json:"quantity"`
 	Price         float64 `bun:"price,notnull" json:"price"`
 	utils.Timestamp
-	MenuItem *restaurant.MenuItem `bun:"rel:belongs-to,join:item_id=menu_id"`
-	Order    *Order               `bun:"rel:belongs-to,join:order_id=order_id"`
+	MenuItem   *restaurant.MenuItem   `bun:"rel:belongs-to,join:item_id=menu_id" json:"-"`
+	Restaurant *restaurant.Restaurant `bun:"rel:belongs-to,join:restaurant_id=restaurant_id"`
+	Order      *Order                 `bun:"rel:belongs-to,join:order_id=order_id" json:"-"`
 }

@@ -13,6 +13,7 @@ func (s *CartHandler) routes() http.Handler {
 	s.router.POST("/add", s.addToCart)
 	s.router.GET("/list", s.getItems)
 	s.router.DELETE("/remove/:id", s.deleteItemFromCart)
+	s.router.POST("/order/new", s.PlaceNewOrder)
 
 	return s.serve.Gin
 }

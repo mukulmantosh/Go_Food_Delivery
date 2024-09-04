@@ -1,4 +1,4 @@
-package restaurant
+package cart
 
 import (
 	"Go_Food_Delivery/pkg/database/models/order"
@@ -6,5 +6,5 @@ import (
 )
 
 type Order interface {
-	AddOrder(ctx context.Context, order *order.Order) (*order.Order, error)
+	PlaceOrder(ctx context.Context, cartId int64) (*order.Order, error)
 }
