@@ -48,50 +48,18 @@ func (cartSrv *CartService) PlaceOrder(ctx context.Context, cartId int64) (*orde
 		orderTotal += newOrderItems[i].Price
 	}
 
-	//newOrder.TotalAmount = orderTotal
 	_, err = cartSrv.db.Update(ctx, "orders", database.Filter{"total_amount": orderTotal, "order_status": "in_progress"},
 		database.Filter{"order_id": newOrder.OrderID})
 	if err != nil {
 		return nil, err
 	}
 
+	//remove all items from the cart.
+	filter := database.Filter{"cart_id": cartId}
+
+	_, err = cartSrv.db.Delete(ctx, "cart_items", filter)
+	if err != nil {
+		return nil, errors.New("failed to delete cart items")
+	}
 	return nil, err
 }
-
-//type CartItems struct {
-//	bun.BaseModel `bun:"table:cart_items"`
-//	CartItemID    int64 `bun:",pk,autoincrement" json:"cart_item_id"`
-//	CartID        int64 `bun:"cart_id,notnull" json:"cart_id"`
-//	ItemID        int64 `bun:"item_id,notnull" json:"item_id"`
-//	RestaurantID  int64 `bun:"restaurant_id,notnull" json:"restaurant_id"`
-//	Quantity      int64 `bun:"quantity,notnull" json:"quantity"`
-//	utils.Timestamp
-//	Restaurant *restaurant.Restaurant `bun:"rel:belongs-to,join:restaurant_id=restaurant_id" json:"-"`
-//	MenuItem   *restaurant.MenuItem   `bun:"rel:belongs-to,join:item_id=menu_id" json:"menu_item"`
-//	Cart       *Cart                  `bun:"rel:belongs-to,join:cart_id=cart_id" json:"-"`
-//}
-
-//type Order struct {
-//	bun.BaseModel   `bun:"table:orders"`
-//	OrderID         int64   `bun:",pk,autoincrement" json:"order_id"`
-//	UserID          int64   `bun:"user_id,notnull" json:"user_id"`
-//	OrderStatus     string  `bun:"order_status,notnull" json:"order_status"`
-//	TotalAmount     float64 `bun:"total_amount,notnull" json:"total_amount"`
-//	DeliveryAddress string  `bun:"delivery_address,notnull" json:"delivery_address"`
-//	utils.Timestamp
-//	User *userModel.User `bun:"rel:belongs-to,join:user_id=id"`
-//}
-//
-//type OrderItems struct {
-//	bun.BaseModel `bun:"table:order_items"`
-//	OrderItemID   int64   `bun:",pk,autoincrement" json:"order_item_id"`
-//	OrderID       int64   `bun:"order_id,notnull" json:"order_id"`
-//	ItemID        int64   `bun:"item_id,notnull" json:"item_id"`
-//	RestaurantID  int64   `bun:"restaurant_id,notnull" json:"restaurant_id"`
-//	Quantity      int64   `bun:"quantity,notnull" json:"quantity"`
-//	Price         float64 `bun:"price,notnull" json:"price"`
-//	utils.Timestamp
-//	MenuItem   *restaurant.MenuItem   `bun:"rel:belongs-to,join:item_id=menu_id" json:"-"`
-//	Restaurant *restaurant.Restaurant `bun:"rel:belongs-to,join:restaurant_id=restaurant_id"`
-//	Order      *Order                 `bun:"rel:belongs-to,join:order_id=order_id" json:"-"`
-//}
