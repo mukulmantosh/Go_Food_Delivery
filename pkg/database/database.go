@@ -81,13 +81,6 @@ func (d *DB) SelectAll(ctx context.Context, tableName string, model any) error {
 	return nil
 }
 
-func (d *DB) Raw(ctx context.Context, model any, query string, args ...interface{}) error {
-	if err := d.db.NewRaw(query, args...).Scan(ctx, model); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (d *DB) SelectWithRelation(ctx context.Context, model any, relations []string, columnName string, parameter any) error {
 	query := d.db.NewSelect().Model(model)
 	for _, relation := range relations {
@@ -99,6 +92,13 @@ func (d *DB) SelectWithRelation(ctx context.Context, model any, relations []stri
 		return err
 	}
 
+	return nil
+}
+
+func (d *DB) Raw(ctx context.Context, model any, query string, args ...interface{}) error {
+	if err := d.db.NewRaw(query, args...).Scan(ctx, model); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -120,7 +120,7 @@ func (d *DB) whereCondition(filter Filter, ConditionType string) string {
 		case string:
 			// Quote string values
 			formattedValue = fmt.Sprintf("'%s'", v)
-		case int64:
+		case int, int64:
 			formattedValue = fmt.Sprintf("%d", v)
 		case float64:
 			formattedValue = fmt.Sprintf("%.2f", v)
@@ -128,7 +128,7 @@ func (d *DB) whereCondition(filter Filter, ConditionType string) string {
 			log.Fatal("DB::Query:: Un-handled type for where condition!")
 
 		}
-		whereClauses = append(whereClauses, fmt.Sprintf("%s = %s", key, formattedValue))
+		whereClauses = append(whereClauses, fmt.Sprintf("%s=%s", key, formattedValue))
 	}
 
 	var result string

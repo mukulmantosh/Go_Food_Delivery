@@ -7,4 +7,5 @@ import (
 
 type Order interface {
 	PlaceOrder(ctx context.Context, cartId int64) (*order.Order, error)
+	OrderList(ctx context.Context, userId int64) (*[]order.Order, error)
 }

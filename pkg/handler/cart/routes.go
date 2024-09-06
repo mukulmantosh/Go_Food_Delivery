@@ -14,6 +14,8 @@ func (s *CartHandler) routes() http.Handler {
 	s.router.GET("/list", s.getItems)
 	s.router.DELETE("/remove/:id", s.deleteItemFromCart)
 	s.router.POST("/order/new", s.PlaceNewOrder)
+	s.router.GET("/orders", s.getOrderList)
+	s.router.GET("/orders/:id", s.getOrderItemsList)
 
 	return s.serve.Gin
 }
