@@ -201,6 +201,7 @@ func (d *DB) Migrate() error {
 		(*cart.Cart)(nil),
 		(*cart.CartItems)(nil),
 		(*delivery.DeliveryPerson)(nil),
+		(*delivery.Deliveries)(nil),
 	}
 
 	for _, model := range models {
