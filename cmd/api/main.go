@@ -5,10 +5,12 @@ import (
 	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/handler"
 	crt "Go_Food_Delivery/pkg/handler/cart"
+	delv "Go_Food_Delivery/pkg/handler/delivery"
 	"Go_Food_Delivery/pkg/handler/restaurant"
 	revw "Go_Food_Delivery/pkg/handler/review"
 	"Go_Food_Delivery/pkg/handler/user"
 	"Go_Food_Delivery/pkg/service/cart"
+	"Go_Food_Delivery/pkg/service/delivery"
 	restro "Go_Food_Delivery/pkg/service/restaurant"
 	"Go_Food_Delivery/pkg/service/review"
 	usr "Go_Food_Delivery/pkg/service/user"
@@ -57,6 +59,9 @@ func main() {
 	cartService := cart.NewCartService(db, env)
 	crt.NewCartHandler(s, "/cart", cartService, middlewares, validate)
 
+	// Delivery
+	deliveryService := delivery.NewDeliveryService(db, env)
+	delv.NewDeliveryHandler(s, "/delivery", deliveryService, nil, validate)
 	log.Fatal(s.Run())
 
 }
