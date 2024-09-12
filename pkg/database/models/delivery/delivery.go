@@ -11,9 +11,12 @@ type DeliveryPerson struct {
 	bun.BaseModel    `bun:"table:delivery_person"`
 	DeliveryPersonID int64  `bun:",pk,autoincrement" json:"delivery_person_id"`
 	Name             string `bun:"name,notnull" json:"name"`
-	Phone            string `bun:"phone,notnull" json:"phone"`
+	Phone            string `bun:"phone,unique,notnull" json:"phone"`
 	VehicleDetails   string `bun:"vehicle_details,notnull" json:"vehicle_details"`
 	Status           string `bun:"status,notnull" json:"status"`
+	AuthKey          string `bun:"auth_key,notnull" json:"auth_key"`
+	AuthKeyURL       string `bun:"auth_key_url,notnull" json:"auth_key_url"`
+	IsAuthSet        bool   `bun:"is_auth_set,notnull" json:"is_auth_set"`
 	utils.Timestamp
 }
 
@@ -26,4 +29,10 @@ type Deliveries struct {
 	DeliveryTime     time.Time    `bun:",nullzero"`
 	Order            *order.Order `bun:"rel:belongs-to,join:order_id=order_id" json:"-"`
 	utils.Timestamp
+}
+
+type DeliveryPersonParams struct {
+	Name           string `json:"name"`
+	Phone          string `json:"phone"`
+	VehicleDetails string `json:"vehicle_details"`
 }

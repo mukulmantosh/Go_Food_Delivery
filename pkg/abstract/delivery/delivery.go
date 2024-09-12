@@ -6,5 +6,6 @@ import (
 )
 
 type DeliveryPerson interface {
-	AddDeliveryPerson(ctx context.Context, deliveryPerson *delivery.DeliveryPerson) (*delivery.DeliveryPerson, error)
+	AddDeliveryPerson(ctx context.Context, deliveryPerson *delivery.DeliveryPerson) (bool, error)
+	GenerateTOTP(_ context.Context, phone string) (string, string, error)
 }
