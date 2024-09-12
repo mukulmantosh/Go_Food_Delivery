@@ -5,13 +5,23 @@ import (
 	"Go_Food_Delivery/pkg/database/models/delivery"
 	"context"
 	"errors"
-	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/pquerna/otp/totp"
 	"log/slog"
 	"os"
 	"time"
 )
+
+func (deliverSrv *DeliveryService) GenerateTOTP(_ context.Context, phone string) (string, string, error) {
+	key, err := totp.Generate(totp.GenerateOpts{
+		Issuer:      "Food Delivery",
+		AccountName: phone,
+	})
+	if err != nil {
+		return "", "", errors.New("error generating key")
+	}
+	return key.Secret(), key.URL(), nil
+}
 
 func (deliverSrv *DeliveryService) ValidateAccountDetails(ctx context.Context, phone string) (*delivery.DeliveryPerson, error) {
 	var deliveryAccountInfo delivery.DeliveryPerson
@@ -22,7 +32,6 @@ func (deliverSrv *DeliveryService) ValidateAccountDetails(ctx context.Context, p
 	if deliveryAccountInfo.Status != "AVAILABLE" {
 		return nil, errors.New("account is inactive or not available")
 	}
-	fmt.Printf("%+v", deliveryAccountInfo)
 	return &deliveryAccountInfo, nil
 }
 
