@@ -36,3 +36,8 @@ type DeliveryPersonParams struct {
 	Phone          string `json:"phone"`
 	VehicleDetails string `json:"vehicle_details"`
 }
+
+type DeliveryLoginParams struct {
+	Phone string `json:"phone"`
+	OTP   string `json:"otp"`
+}

@@ -11,6 +11,7 @@ func (s *DeliveryHandler) registerGroup(middleware ...gin.HandlerFunc) gin.IRout
 
 func (s *DeliveryHandler) routes() http.Handler {
 	s.router.POST("/add", s.addDeliveryPerson)
+	s.router.POST("/login", s.loginDelivery)
 
 	return s.serve.Gin
 }
