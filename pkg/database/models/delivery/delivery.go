@@ -41,3 +41,8 @@ type DeliveryLoginParams struct {
 	Phone string `json:"phone"`
 	OTP   string `json:"otp"`
 }
+
+type DeliveryOrderPlacementParams struct {
+	OrderID int64  `json:"order_id"`
+	Status  string `json:"status"`
+}
