@@ -8,28 +8,32 @@ import (
 )
 
 type DeliveryHandler struct {
-	serve      *handler.Server
-	group      string
-	router     gin.IRoutes
-	service    *delivery.DeliveryService
-	middleware []gin.HandlerFunc
-	validate   *validator.Validate
+	serve             *handler.Server
+	group             string
+	middlewareGuarded gin.IRoutes
+	router            gin.IRoutes
+	service           *delivery.DeliveryService
+	middleware        []gin.HandlerFunc
+	validate          *validator.Validate
 }
 
-func NewDeliveryHandler(s *handler.Server, groupName string,
+func NewDeliveryHandler(s *handler.Server, group string,
 	service *delivery.DeliveryService, middleware []gin.HandlerFunc,
 	validate *validator.Validate) {
 
 	cartHandler := &DeliveryHandler{
 		s,
-		groupName,
+		group,
+		nil,
 		nil,
 		service,
 		middleware,
 		validate,
 	}
-	cartHandler.router = cartHandler.registerGroup(middleware...)
-	cartHandler.routes()
+	cartHandler.middlewareGuarded = cartHandler.registerMiddlewareGroup(middleware...)
+	cartHandler.router = cartHandler.registerGroup()
+	cartHandler.regularRoutes()
+	cartHandler.middlewareRoutes()
 	cartHandler.registerValidator()
 }
 

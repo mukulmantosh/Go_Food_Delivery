@@ -18,7 +18,9 @@ func (s *DeliveryHandler) updateOrder(c *gin.Context) {
 		return
 	}
 
-	_, err := s.service.OrderPlacement(ctx, deliveryOrder.OrderID, deliveryOrder.Status)
+	userID := c.GetInt64("userID")
+
+	_, err := s.service.OrderPlacement(ctx, userID, deliveryOrder.OrderID, deliveryOrder.Status)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

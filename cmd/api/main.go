@@ -61,7 +61,7 @@ func main() {
 
 	// Delivery
 	deliveryService := delivery.NewDeliveryService(db, env)
-	delv.NewDeliveryHandler(s, "/delivery", deliveryService, nil, validate)
+	delv.NewDeliveryHandler(s, "/delivery", deliveryService, middlewares, validate)
 	log.Fatal(s.Run())
 
 }
