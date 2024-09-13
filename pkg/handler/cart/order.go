@@ -61,3 +61,20 @@ func (s *CartHandler) getOrderItemsList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"orders": orders})
 	return
 }
+
+func (s *CartHandler) getDeliveriesList(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	userID := c.GetInt64("userID")
+	orderID, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	deliveries, err := s.service.DeliveryInformation(ctx, orderID, userID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"delivery_info": deliveries})
+	return
+}

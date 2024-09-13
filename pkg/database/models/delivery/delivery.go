@@ -47,3 +47,14 @@ type DeliveryOrderPlacementParams struct {
 	OrderID int64  `json:"order_id"`
 	Status  string `json:"status"`
 }
+
+type DeliveryListResponse struct {
+	DeliveryId       int       `json:"delivery_id"`
+	DeliveryPersonId int       `json:"delivery_person_id"`
+	DeliveryStatus   string    `json:"delivery_status"`
+	DeliveryTime     time.Time `json:"delivery_time"`
+	CreatedAt        time.Time `json:"created_at"`
+	Name             string    `json:"name"`
+	VehicleDetails   string    `json:"vehicle_details"`
+	Phone            string    `json:"phone"`
+}

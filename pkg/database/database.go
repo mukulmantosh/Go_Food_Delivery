@@ -28,7 +28,7 @@ type Database interface {
 	Delete(ctx context.Context, tableName string, filter Filter) (sql.Result, error)
 	Select(ctx context.Context, model any, columnName string, parameter any) error
 	SelectAll(ctx context.Context, tableName string, model any) error
-	SelectWithRelation(ctx context.Context, model any, relations []string, columnName string, parameter any) error
+	SelectWithRelation(ctx context.Context, model any, relations []string, Condition Filter) error
 	SelectWithMultipleFilter(ctx context.Context, model any, Condition Filter) error
 	Raw(ctx context.Context, model any, query string, args ...interface{}) error
 	Update(ctx context.Context, tableName string, Set Filter, Condition Filter) (sql.Result, error)
@@ -91,13 +91,13 @@ func (d *DB) SelectAll(ctx context.Context, tableName string, model any) error {
 	return nil
 }
 
-func (d *DB) SelectWithRelation(ctx context.Context, model any, relations []string, columnName string, parameter any) error {
+func (d *DB) SelectWithRelation(ctx context.Context, model any, relations []string, Condition Filter) error {
 	query := d.db.NewSelect().Model(model)
 	for _, relation := range relations {
 		query.Relation(relation)
 	}
 
-	err := query.Where(fmt.Sprintf("%s = ?", columnName), parameter).Scan(ctx)
+	err := query.Where(d.whereCondition(Condition, "AND")).Scan(ctx)
 	if err != nil {
 		return err
 	}

@@ -16,6 +16,6 @@ func (s *CartHandler) routes() http.Handler {
 	s.router.POST("/order/new", s.PlaceNewOrder)
 	s.router.GET("/orders", s.getOrderList)
 	s.router.GET("/orders/:id", s.getOrderItemsList)
-
+	s.router.GET("/orders/deliveries/:id", s.getDeliveriesList)
 	return s.serve.Gin
 }

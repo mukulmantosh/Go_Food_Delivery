@@ -1,4 +1,4 @@
-package cart
+package cart_order
 
 import (
 	"Go_Food_Delivery/pkg/database"

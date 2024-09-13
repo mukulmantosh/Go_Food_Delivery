@@ -1,6 +1,7 @@
-package cart
+package cart_order
 
 import (
+	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/database/models/order"
 	"context"
 	"errors"
@@ -29,7 +30,9 @@ func (cartSrv *CartService) OrderItemsList(ctx context.Context, userId int64, or
 	}
 
 	var relatedFields = []string{"Restaurant", "MenuItem"}
-	err = cartSrv.db.SelectWithRelation(ctx, &ordersItemsList, relatedFields, "order_id", orderId)
+	whereFilter := database.Filter{"order_id": orderId}
+
+	err = cartSrv.db.SelectWithRelation(ctx, &ordersItemsList, relatedFields, whereFilter)
 
 	if err != nil {
 		return nil, err
