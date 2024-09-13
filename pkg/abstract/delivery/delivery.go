@@ -19,3 +19,9 @@ type Validation interface {
 type DeliveryLogin interface {
 	GenerateJWT(ctx context.Context, userId int64, name string) (string, error)
 }
+
+type Deliveries interface {
+	OrderPlacement(ctx context.Context,
+		deliveryPersonID int64, orderID int64, deliveryStatus string) (bool, error)
+	DeliveryListing(ctx context.Context, orderID int64) (*[]delivery.Deliveries, error)
+}

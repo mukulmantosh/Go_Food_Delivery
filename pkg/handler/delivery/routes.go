@@ -21,5 +21,6 @@ func (s *DeliveryHandler) regularRoutes() http.Handler {
 
 func (s *DeliveryHandler) middlewareRoutes() http.Handler {
 	s.middlewareGuarded.POST("/update-order", s.updateOrder)
+	s.middlewareGuarded.GET("/deliveries/:order_id", s.deliveryListing)
 	return s.serve.Gin
 }

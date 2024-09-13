@@ -22,12 +22,13 @@ type DeliveryPerson struct {
 
 type Deliveries struct {
 	bun.BaseModel    `bun:"table:deliveries"`
-	DeliveryID       int64        `bun:",pk,autoincrement" json:"delivery_id"`
-	DeliveryPersonID int64        `bun:"delivery_person_id,notnull" json:"delivery_person_id"`
-	OrderID          int64        `bun:"order_id,notnull" json:"order_id"`
-	DeliveryStatus   string       `bun:"delivery_status,notnull" json:"delivery_status"`
-	DeliveryTime     time.Time    `bun:",nullzero"`
-	Order            *order.Order `bun:"rel:belongs-to,join:order_id=order_id" json:"-"`
+	DeliveryID       int64           `bun:",pk,autoincrement" json:"delivery_id"`
+	DeliveryPersonID int64           `bun:"delivery_person_id,notnull" json:"-"`
+	OrderID          int64           `bun:"order_id,notnull" json:"order_id"`
+	DeliveryStatus   string          `bun:"delivery_status,notnull" json:"delivery_status"`
+	DeliveryTime     time.Time       `bun:",nullzero"`
+	Order            *order.Order    `bun:"rel:belongs-to,join:order_id=order_id" json:"-"`
+	DeliveryPerson   *DeliveryPerson `bun:"rel:belongs-to,join:delivery_person_id=delivery_person_id" json:"-"`
 	utils.Timestamp
 }
 

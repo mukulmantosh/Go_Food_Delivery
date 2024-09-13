@@ -5,6 +5,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -28,4 +29,23 @@ func (s *DeliveryHandler) updateOrder(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Order Updated!"})
 
+}
+
+func (s *DeliveryHandler) deliveryListing(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
+	defer cancel()
+
+	orderId := c.Param("order_id")
+
+	// Convert to integer
+	orderID, _ := strconv.ParseInt(orderId, 10, 64)
+	userID := c.GetInt64("userID")
+
+	deliveries, err := s.service.DeliveryListing(ctx, orderID, userID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"deliveries": deliveries})
 }
