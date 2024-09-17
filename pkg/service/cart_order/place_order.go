@@ -6,6 +6,7 @@ import (
 	"Go_Food_Delivery/pkg/database/models/order"
 	"context"
 	"errors"
+	"fmt"
 )
 
 func (cartSrv *CartService) PlaceOrder(ctx context.Context, cartId int64, userId int64) (*order.Order, error) {
@@ -66,6 +67,16 @@ func (cartSrv *CartService) RemoveItemsFromCart(ctx context.Context, cartId int6
 	_, err := cartSrv.db.Delete(ctx, "cart_items", filter)
 	if err != nil {
 		return errors.New("failed to delete cart items")
+	}
+	return nil
+}
+
+func (cartSrv *CartService) NewOrderPlacedNotification(userId int64, orderId int64) error {
+	message := fmt.Sprintf("Your order number %d has been placed successfully", orderId)
+	topic := fmt.Sprintf("orders.new.%d", userId)
+	err := cartSrv.nats.Pub(topic, []byte(message))
+	if err != nil {
+		return err
 	}
 	return nil
 }

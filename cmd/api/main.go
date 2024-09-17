@@ -9,6 +9,7 @@ import (
 	"Go_Food_Delivery/pkg/handler/restaurant"
 	revw "Go_Food_Delivery/pkg/handler/review"
 	"Go_Food_Delivery/pkg/handler/user"
+	"Go_Food_Delivery/pkg/nats"
 	"Go_Food_Delivery/pkg/service/cart_order"
 	"Go_Food_Delivery/pkg/service/delivery"
 	restro "Go_Food_Delivery/pkg/service/restaurant"
@@ -36,7 +37,7 @@ func main() {
 	}
 
 	// Connect NATS
-	//natServer, err := nats.NewNATS()
+	natServer, err := nats.NewNATS()
 
 	s := handler.NewServer(db)
 
@@ -59,7 +60,7 @@ func main() {
 	revw.NewReviewProtectedHandler(s, "/review", reviewService, middlewares, validate)
 
 	// Cart
-	cartService := cart_order.NewCartService(db, env)
+	cartService := cart_order.NewCartService(db, env, natServer)
 	crt.NewCartHandler(s, "/cart", cartService, middlewares, validate)
 
 	// Delivery

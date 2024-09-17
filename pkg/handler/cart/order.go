@@ -19,7 +19,7 @@ func (s *CartHandler) PlaceNewOrder(c *gin.Context) {
 		return
 	}
 	// Place a new order.
-	_, err = s.service.PlaceOrder(ctx, cartInfo.CartID, userID)
+	newOrder, err := s.service.PlaceOrder(ctx, cartInfo.CartID, userID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -28,6 +28,13 @@ func (s *CartHandler) PlaceNewOrder(c *gin.Context) {
 	err = s.service.RemoveItemsFromCart(ctx, cartInfo.CartID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Notify new order
+	err = s.service.NewOrderPlacedNotification(userID, newOrder.OrderID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Notification failed!"})
 		return
 	}
 

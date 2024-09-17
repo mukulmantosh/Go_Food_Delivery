@@ -12,22 +12,22 @@ type NATS struct {
 func NewNATS() (*NATS, error) {
 	nc, err := nats.Connect(nats.DefaultURL, nats.Name("food-delivery-nats"))
 	if err != nil {
-		log.Fatalf("Error: %s", err)
+		log.Fatalf("Error connecting to NATS:: %s", err)
 	}
 	return &NATS{conn: nc}, err
 }
 
-func (n *NATS) Publish(channel string, message []byte) error {
-	err := n.conn.Publish(channel, message)
+func (n *NATS) Pub(topic string, message []byte) error {
+	err := n.conn.Publish(topic, message)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (n *NATS) Subscribe(channel string) error {
-	_, err := n.conn.Subscribe(channel, func(msg *nats.Msg) {
-		log.Printf("Received a message: %s", string(msg.Data))
+func (n *NATS) Sub(topic string, message chan<- string) error {
+	_, err := n.conn.Subscribe(topic, func(msg *nats.Msg) {
+		message <- string(msg.Data)
 	})
 	if err != nil {
 		return err

@@ -7,7 +7,12 @@ import (
 )
 
 type Order interface {
-	PlaceOrder(ctx context.Context, cartId int64) (*order.Order, error)
+	PlaceOrder(ctx context.Context, cartId int64, userId int64) (*order.Order, error)
 	OrderList(ctx context.Context, userId int64) (*[]order.Order, error)
-	DeliveryInformation(ctx context.Context, orderId int64) (*[]delivery.Deliveries, error)
+	RemoveItemsFromCart(ctx context.Context, cartId int64) error
+	DeliveryInformation(ctx context.Context, orderId int64, userId int64) (*[]delivery.DeliveryListResponse, error)
+}
+
+type Notification interface {
+	NewOrderPlacedNotification(userId int64, orderId int64) error
 }
