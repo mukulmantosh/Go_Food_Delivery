@@ -35,6 +35,9 @@ func main() {
 		log.Fatalf("Error migrating database: %s", err)
 	}
 
+	// Connect NATS
+	//natServer, err := nats.NewNATS()
+
 	s := handler.NewServer(db)
 
 	// Initialize Validator

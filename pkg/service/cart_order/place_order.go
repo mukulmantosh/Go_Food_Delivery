@@ -8,7 +8,7 @@ import (
 	"errors"
 )
 
-func (cartSrv *CartService) PlaceOrder(ctx context.Context, cartId int64) (*order.Order, error) {
+func (cartSrv *CartService) PlaceOrder(ctx context.Context, cartId int64, userId int64) (*order.Order, error) {
 	var cartItems []cart.CartItems
 	var newOrder order.Order
 	var newOrderItems []order.OrderItems
@@ -26,7 +26,7 @@ func (cartSrv *CartService) PlaceOrder(ctx context.Context, cartId int64) (*orde
 	}
 
 	// Creating a new order.
-	newOrder.UserID = 1
+	newOrder.UserID = userId
 	newOrder.OrderStatus = "pending"
 	newOrder.TotalAmount = orderTotal
 	newOrder.DeliveryAddress = "New Delhi"
@@ -56,12 +56,16 @@ func (cartSrv *CartService) PlaceOrder(ctx context.Context, cartId int64) (*orde
 		return nil, err
 	}
 
+	return &newOrder, nil
+
+}
+
+func (cartSrv *CartService) RemoveItemsFromCart(ctx context.Context, cartId int64) error {
 	//remove all items from the cart.
 	filter := database.Filter{"cart_id": cartId}
-
-	_, err = cartSrv.db.Delete(ctx, "cart_items", filter)
+	_, err := cartSrv.db.Delete(ctx, "cart_items", filter)
 	if err != nil {
-		return nil, errors.New("failed to delete cart items")
+		return errors.New("failed to delete cart items")
 	}
-	return nil, err
+	return nil
 }

@@ -2,7 +2,6 @@ package cart
 
 import (
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -19,13 +18,19 @@ func (s *CartHandler) PlaceNewOrder(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	order, err := s.service.PlaceOrder(ctx, cartInfo.CartID)
+	// Place a new order.
+	_, err = s.service.PlaceOrder(ctx, cartInfo.CartID, userID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println(order)
+	// Remove all items from the cart after placing order.
+	err = s.service.RemoveItemsFromCart(ctx, cartInfo.CartID)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusCreated, gin.H{"message": "Order placed!"})
 
 }
