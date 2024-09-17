@@ -6,12 +6,14 @@ import (
 	"Go_Food_Delivery/pkg/handler"
 	crt "Go_Food_Delivery/pkg/handler/cart"
 	delv "Go_Food_Delivery/pkg/handler/delivery"
+	notify "Go_Food_Delivery/pkg/handler/notification"
 	"Go_Food_Delivery/pkg/handler/restaurant"
 	revw "Go_Food_Delivery/pkg/handler/review"
 	"Go_Food_Delivery/pkg/handler/user"
 	"Go_Food_Delivery/pkg/nats"
 	"Go_Food_Delivery/pkg/service/cart_order"
 	"Go_Food_Delivery/pkg/service/delivery"
+	"Go_Food_Delivery/pkg/service/notification"
 	restro "Go_Food_Delivery/pkg/service/restaurant"
 	"Go_Food_Delivery/pkg/service/review"
 	usr "Go_Food_Delivery/pkg/service/user"
@@ -66,6 +68,16 @@ func main() {
 	// Delivery
 	deliveryService := delivery.NewDeliveryService(db, env)
 	delv.NewDeliveryHandler(s, "/delivery", deliveryService, middlewares, validate)
+
+	// Notification
+	ordersMessage := make(chan string)
+	notifyService := notification.NewNotificationService(db, env, natServer)
+	err = notifyService.SubscribeNewOrders(&ordersMessage)
+	if err != nil {
+		log.Fatal("Error::SubscribeNewOrders", err)
+	}
+	notify.NewNotifyHandler(s, "/notify", notifyService, middlewares, validate, &ordersMessage)
+
 	log.Fatal(s.Run())
 
 }

@@ -25,9 +25,9 @@ func (n *NATS) Pub(topic string, message []byte) error {
 	return nil
 }
 
-func (n *NATS) Sub(topic string, message chan<- string) error {
+func (n *NATS) Sub(topic string, message *chan string) error {
 	_, err := n.conn.Subscribe(topic, func(msg *nats.Msg) {
-		message <- string(msg.Data)
+		*message <- string(msg.Data)
 	})
 	if err != nil {
 		return err
