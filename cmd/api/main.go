@@ -19,6 +19,7 @@ import (
 	usr "Go_Food_Delivery/pkg/service/user"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/gorilla/websocket"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -70,13 +71,13 @@ func main() {
 	delv.NewDeliveryHandler(s, "/delivery", deliveryService, middlewares, validate)
 
 	// Notification
-	ordersMessage := make(chan string)
+	wsClients := make(map[*websocket.Conn]bool)
 	notifyService := notification.NewNotificationService(db, env, natServer)
-	err = notifyService.SubscribeNewOrders(&ordersMessage)
+	err = notifyService.SubscribeNewOrders(wsClients)
 	if err != nil {
 		log.Fatal("Error::SubscribeNewOrders", err)
 	}
-	notify.NewNotifyHandler(s, "/notify", notifyService, middlewares, validate, &ordersMessage)
+	notify.NewNotifyHandler(s, "/notify", notifyService, middlewares, validate, wsClients)
 
 	log.Fatal(s.Run())
 

@@ -17,13 +17,13 @@ type NotifyHandler struct {
 	service           *notification.NotificationService
 	middleware        []gin.HandlerFunc
 	validate          *validator.Validate
-	message           *chan string
 	ws                *websocket.Upgrader
+	clients           map[*websocket.Conn]bool
 }
 
 func NewNotifyHandler(s *handler.Server, group string,
 	service *notification.NotificationService, middleware []gin.HandlerFunc,
-	validate *validator.Validate, message *chan string) {
+	validate *validator.Validate, clients map[*websocket.Conn]bool) {
 
 	// WebSocket
 	var ws = &websocket.Upgrader{
@@ -40,8 +40,8 @@ func NewNotifyHandler(s *handler.Server, group string,
 		service,
 		middleware,
 		validate,
-		message,
 		ws,
+		clients,
 	}
 	cartHandler.middlewareGuarded = cartHandler.registerMiddlewareGroup(middleware...)
 	cartHandler.router = cartHandler.registerGroup()

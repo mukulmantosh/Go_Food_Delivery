@@ -14,10 +14,11 @@ func (s *NotifyHandler) registerGroup() gin.IRoutes {
 }
 
 func (s *NotifyHandler) regularRoutes() http.Handler {
+	s.router.GET("/ws", s.notifyOrders)
 	return s.serve.Gin
 }
 
 func (s *NotifyHandler) middlewareRoutes() http.Handler {
-	s.middlewareGuarded.GET("/ws", s.notifyOrders)
+
 	return s.serve.Gin
 }
