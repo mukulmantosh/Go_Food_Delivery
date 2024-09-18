@@ -6,6 +6,7 @@ import (
 	"Go_Food_Delivery/pkg/database/models/order"
 	"context"
 	"errors"
+	"time"
 )
 
 func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
@@ -20,19 +21,35 @@ func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
 		return false, err
 	}
 
+	invalidStatuses := map[string]bool{
+		"cancelled": true,
+		"completed": true,
+		"failed":    true,
+		"delivered": true,
+	}
+
+	if invalidStatuses[orderInfo.OrderStatus] {
+		return false, errors.New("this order is invalid or it has been already delivered,failed or cancelled")
+	}
+
 	switch orderInfo.OrderStatus {
-	case "in_progress":
+	case "in_progress", "on_the_way":
 		// Update Order
 		_, err := deliverSrv.db.Update(ctx, "orders", setFilter, whereFilter)
 		if err != nil {
 			return false, err
 		}
 
-		// Add info. Into the delivery table.
+		// Add info. into the delivery table.
 		deliver := new(delivery.Deliveries)
 		deliver.DeliveryPersonID = deliveryPersonID
 		deliver.OrderID = orderID
 		deliver.DeliveryStatus = deliveryStatus
+
+		if orderInfo.OrderStatus == "on_the_way" {
+			deliver.DeliveryTime = time.Now()
+
+		}
 
 		_, err = deliverSrv.db.Insert(ctx, deliver)
 		if err != nil {
@@ -40,8 +57,6 @@ func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
 		}
 
 		return true, nil
-	case "failed", "completed", "cancelled", "on_the_way":
-		return false, errors.New("this order is invalid or has been already delivered/on_the_way/cancelled")
 	default:
 		return false, errors.New("unknown order status")
 	}
