@@ -42,6 +42,9 @@ func main() {
 	// Connect NATS
 	natServer, err := nats.NewNATS()
 
+	// WebSocket Clients
+	wsClients := make(map[string]*websocket.Conn)
+
 	s := handler.NewServer(db)
 
 	// Initialize Validator
@@ -71,7 +74,6 @@ func main() {
 	delv.NewDeliveryHandler(s, "/delivery", deliveryService, middlewares, validate)
 
 	// Notification
-	wsClients := make(map[string]*websocket.Conn)
 	notifyService := notification.NewNotificationService(db, env, natServer)
 	err = notifyService.SubscribeNewOrders(wsClients)
 	if err != nil {

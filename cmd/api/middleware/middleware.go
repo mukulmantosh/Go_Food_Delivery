@@ -16,7 +16,7 @@ type UserClaims struct {
 	jwt.RegisteredClaims
 }
 
-func validateToken(token string) (bool, int64) {
+func ValidateToken(token string) (bool, int64) {
 
 	tokenInfo, err := jwt.ParseWithClaims(token, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
@@ -50,7 +50,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 		token := tokenParts[1]
 
-		tokenValidation, userID := validateToken(token)
+		tokenValidation, userID := ValidateToken(token)
 		if !tokenValidation {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Token"})
 			c.Abort()
