@@ -13,14 +13,21 @@ func (s *NotifyHandler) notifyOrders(c *gin.Context) {
 	}
 	defer conn.Close()
 
-	s.clients[conn] = true
-	log.Println("New client connected")
+	token := c.Query("token")
+	if token == "" {
+		log.Println("No Token Found!")
+		conn.Close()
+		return
+	}
+	userId := "1"
+	s.clients[userId] = conn
+	log.Printf("New client connected::%s", userId)
 
 	for {
 		_, _, err := conn.ReadMessage()
 		if err != nil {
-			log.Println("Client disconnected:", err)
-			delete(s.clients, conn)
+			log.Printf("Client disconnected: %s::%v", userId, err)
+			delete(s.clients, userId)
 			break
 		}
 	}

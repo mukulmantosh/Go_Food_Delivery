@@ -18,12 +18,12 @@ type NotifyHandler struct {
 	middleware        []gin.HandlerFunc
 	validate          *validator.Validate
 	ws                *websocket.Upgrader
-	clients           map[*websocket.Conn]bool
+	clients           map[string]*websocket.Conn
 }
 
 func NewNotifyHandler(s *handler.Server, group string,
 	service *notification.NotificationService, middleware []gin.HandlerFunc,
-	validate *validator.Validate, clients map[*websocket.Conn]bool) {
+	validate *validator.Validate, clients map[string]*websocket.Conn) {
 
 	// WebSocket
 	var ws = &websocket.Upgrader{

@@ -72,7 +72,7 @@ func (cartSrv *CartService) RemoveItemsFromCart(ctx context.Context, cartId int6
 }
 
 func (cartSrv *CartService) NewOrderPlacedNotification(userId int64, orderId int64) error {
-	message := fmt.Sprintf("USER_ID:%d|MESSAGE:Your order number %d has been placed successfully", userId, orderId)
+	message := fmt.Sprintf("USER_ID:%d|MESSAGE:Your order number %d has been successfully placed, and the chef has begun the cooking process.", userId, orderId)
 	topic := fmt.Sprintf("orders.new.%d", userId)
 	err := cartSrv.nats.Pub(topic, []byte(message))
 	if err != nil {

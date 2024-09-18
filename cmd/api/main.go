@@ -71,7 +71,7 @@ func main() {
 	delv.NewDeliveryHandler(s, "/delivery", deliveryService, middlewares, validate)
 
 	// Notification
-	wsClients := make(map[*websocket.Conn]bool)
+	wsClients := make(map[string]*websocket.Conn)
 	notifyService := notification.NewNotificationService(db, env, natServer)
 	err = notifyService.SubscribeNewOrders(wsClients)
 	if err != nil {

@@ -5,6 +5,8 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/nats-io/nats.go"
 	"log"
+	"log/slog"
+	"strings"
 )
 
 type NATS struct {
@@ -27,26 +29,37 @@ func (n *NATS) Pub(topic string, message []byte) error {
 	return nil
 }
 
-func (n *NATS) Sub(topic string, clients map[*websocket.Conn]bool) error {
+func (n *NATS) Sub(topic string, clients map[string]*websocket.Conn) error {
 
 	_, err := n.Conn.Subscribe(topic, func(msg *nats.Msg) {
 		message := string(msg.Data)
-		log.Println("Received message from NATS:::", message)
+		slog.Info("MESSAGE_REPLY_FROM_NATS", "RECEIVED_MESSAGE", message)
 		fmt.Println("CLIENTS::", clients)
-		for client := range clients {
-			fmt.Println("Sending message to client")
-			fmt.Println(client)
-			err := client.WriteMessage(websocket.TextMessage, []byte(message))
+		userId, messageData := n.formatMessage(message)
+		if conn, ok := clients[userId]; ok {
+			fmt.Println("SENDING_MESSAGE_TO_CLIENT")
+			err := conn.WriteMessage(websocket.TextMessage, []byte(messageData))
 			if err != nil {
 				log.Println("Error sending message to client:", err)
-				client.Close()
-				delete(clients, client)
+				conn.Close()
+				delete(clients, userId)
 			}
 		}
-
 	})
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (n *NATS) formatMessage(message string) (userId string, messageData string) {
+	parts := strings.Split(message, "|")
+	result := make(map[string]string)
+	for _, part := range parts {
+		kv := strings.SplitN(part, ":", 2) // Split into key and value
+		if len(kv) == 2 {
+			result[kv[0]] = kv[1] // Store in a map
+		}
+	}
+	return result["USER_ID"], result["MESSAGE"]
 }
