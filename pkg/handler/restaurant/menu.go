@@ -10,7 +10,7 @@ import (
 )
 
 func (s *RestaurantHandler) addMenu(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(c.Request.Context(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 30*time.Second)
 	defer cancel()
 
 	var menuItem restaurant.MenuItem
