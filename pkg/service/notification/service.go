@@ -26,3 +26,12 @@ func (s *NotificationService) SubscribeNewOrders(clients map[string]*websocket.C
 	}
 	return nil
 }
+
+func (s *NotificationService) SubscribeOrderStatus(clients map[string]*websocket.Conn) error {
+	slog.Info("Listening to ==> NotificationService::SubscribeOrderStatus")
+	err := s.nats.Sub("orders.status.*", clients)
+	if err != nil {
+		return err
+	}
+	return nil
+}

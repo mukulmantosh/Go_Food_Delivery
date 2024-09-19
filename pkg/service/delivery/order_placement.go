@@ -6,6 +6,7 @@ import (
 	"Go_Food_Delivery/pkg/database/models/order"
 	"context"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -56,6 +57,12 @@ func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
 			return false, err
 		}
 
+		message := fmt.Sprintf("USER_ID:%d|MESSAGE:The current status of your order is %s", orderInfo.UserID, deliveryStatus)
+		topic := fmt.Sprintf("orders.status.%d", orderInfo.OrderID)
+		err = deliverSrv.nats.Pub(topic, []byte(message))
+		if err != nil {
+			return false, err
+		}
 		return true, nil
 	default:
 		return false, errors.New("unknown order status")

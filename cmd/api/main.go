@@ -72,15 +72,14 @@ func main() {
 	crt.NewCartHandler(s, "/cart", cartService, middlewares, validate)
 
 	// Delivery
-	deliveryService := delivery.NewDeliveryService(db, env)
+	deliveryService := delivery.NewDeliveryService(db, env, natServer)
 	delv.NewDeliveryHandler(s, "/delivery", deliveryService, middlewares, validate)
 
 	// Notification
 	notifyService := notification.NewNotificationService(db, env, natServer)
-	err = notifyService.SubscribeNewOrders(wsClients)
-	if err != nil {
-		log.Fatal("Error::SubscribeNewOrders", err)
-	}
+	_ = notifyService.SubscribeNewOrders(wsClients)
+	_ = notifyService.SubscribeOrderStatus(wsClients)
+
 	notify.NewNotifyHandler(s, "/notify", notifyService, middlewares, validate, wsClients)
 
 	// Events/Announcements
