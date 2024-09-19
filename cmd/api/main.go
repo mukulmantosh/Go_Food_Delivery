@@ -4,6 +4,7 @@ import (
 	"Go_Food_Delivery/cmd/api/middleware"
 	"Go_Food_Delivery/pkg/database"
 	"Go_Food_Delivery/pkg/handler"
+	"Go_Food_Delivery/pkg/handler/annoucements"
 	crt "Go_Food_Delivery/pkg/handler/cart"
 	delv "Go_Food_Delivery/pkg/handler/delivery"
 	notify "Go_Food_Delivery/pkg/handler/notification"
@@ -11,6 +12,7 @@ import (
 	revw "Go_Food_Delivery/pkg/handler/review"
 	"Go_Food_Delivery/pkg/handler/user"
 	"Go_Food_Delivery/pkg/nats"
+	"Go_Food_Delivery/pkg/service/announcements"
 	"Go_Food_Delivery/pkg/service/cart_order"
 	"Go_Food_Delivery/pkg/service/delivery"
 	"Go_Food_Delivery/pkg/service/notification"
@@ -81,6 +83,9 @@ func main() {
 	}
 	notify.NewNotifyHandler(s, "/notify", notifyService, middlewares, validate, wsClients)
 
+	// Events/Announcements
+	announceService := announcements.NewAnnouncementService(db, env)
+	annoucements.NewAnnouncementHandler(s, "/announcements", announceService, middlewares, validate)
 	log.Fatal(s.Run())
 
 }

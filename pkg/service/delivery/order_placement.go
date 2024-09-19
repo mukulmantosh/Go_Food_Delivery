@@ -40,7 +40,7 @@ func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
 			return false, err
 		}
 
-		// Add info. into the delivery table.
+		// Add info. Into the delivery table.
 		deliver := new(delivery.Deliveries)
 		deliver.DeliveryPersonID = deliveryPersonID
 		deliver.OrderID = orderID
