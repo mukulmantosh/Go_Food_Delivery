@@ -77,6 +77,8 @@ func main() {
 
 	// Notification
 	notifyService := notification.NewNotificationService(db, env, natServer)
+
+	// Subscribe to multiple events.
 	_ = notifyService.SubscribeNewOrders(wsClients)
 	_ = notifyService.SubscribeOrderStatus(wsClients)
 

@@ -56,10 +56,8 @@ func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
 		if err != nil {
 			return false, err
 		}
-
-		message := fmt.Sprintf("USER_ID:%d|MESSAGE:The current status of your order is %s", orderInfo.UserID, deliveryStatus)
-		topic := fmt.Sprintf("orders.status.%d", orderInfo.OrderID)
-		err = deliverSrv.nats.Pub(topic, []byte(message))
+		// Notify User.
+		err = deliverSrv.notifyDeliveryStatusToUser(&orderInfo, deliveryStatus)
 		if err != nil {
 			return false, err
 		}
@@ -68,4 +66,28 @@ func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
 		return false, errors.New("unknown order status")
 	}
 
+}
+
+func (deliverSrv *DeliveryService) notifyDeliveryStatusToUser(order *order.Order, status string) error {
+	var message string
+
+	switch status {
+	case "delivered":
+		message = fmt.Sprintf("USER_ID:%d|MESSAGE:Your order no.%d has been successfully %s", order.UserID, order.OrderID, status)
+	case "failed":
+		message = fmt.Sprintf("USER_ID:%d|MESSAGE:Your order no.%d has been %s", order.UserID, order.OrderID, status)
+	case "cancelled":
+		message = fmt.Sprintf("USER_ID:%d|MESSAGE:Your order no.%d has been %s", order.UserID, order.OrderID, status)
+	case "on_the_way":
+		message = fmt.Sprintf("USER_ID:%d|MESSAGE:Your order no.%d is %s", order.UserID, order.OrderID, status)
+	default:
+		return fmt.Errorf("invalid status: %s", status)
+	}
+
+	topic := fmt.Sprintf("orders.status.%d", order.OrderID)
+	err := deliverSrv.nats.Pub(topic, []byte(message))
+	if err != nil {
+		return err
+	}
+	return nil
 }
