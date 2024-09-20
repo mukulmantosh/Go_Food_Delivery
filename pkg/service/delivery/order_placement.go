@@ -64,7 +64,7 @@ func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
 		deliver.OrderID = orderID
 		deliver.DeliveryStatus = deliveryStatus
 
-		if orderInfo.OrderStatus == "on_the_way" {
+		if deliveryStatus == "delivered" {
 			deliver.DeliveryTime = time.Now()
 
 		}

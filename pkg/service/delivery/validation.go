@@ -13,6 +13,7 @@ func (deliverSrv *DeliveryService) orderValidation(ctx context.Context, order *o
 
 	var deliveryExists int64
 	var deliveryCancelCount int64
+	var totalDeliveryCancellationCount int64
 	err := deliverSrv.db.Raw(ctx, &deliveryExists,
 		`SELECT COUNT(*) FROM deliveries WHERE order_id=? AND delivery_person_id=? AND delivery_status='on_the_way';`,
 		order.OrderID, deliveryPersonID)
@@ -23,6 +24,14 @@ func (deliverSrv *DeliveryService) orderValidation(ctx context.Context, order *o
 	err = deliverSrv.db.Raw(ctx, &deliveryCancelCount,
 		`SELECT COUNT(*) FROM deliveries WHERE order_id=? AND delivery_person_id=? AND delivery_status='cancelled';`,
 		order.OrderID, deliveryPersonID)
+	if err != nil {
+		return false, err
+	}
+
+	err = deliverSrv.db.Raw(ctx, &totalDeliveryCancellationCount,
+		`SELECT count(*) FROM deliveries WHERE delivery_person_id = ? 
+                                  AND delivery_status = 'cancelled' 
+                                  AND created_at >= now() - interval '1 hour';`, deliveryPersonID)
 	if err != nil {
 		return false, err
 	}
