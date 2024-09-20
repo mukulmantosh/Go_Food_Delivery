@@ -10,6 +10,17 @@ import (
 	"time"
 )
 
+func (deliverSrv *DeliveryService) updateOrderStatus(ctx context.Context, orderID int64, status string) error {
+	_, err := deliverSrv.db.Update(ctx, "orders", database.Filter{"order_status": status},
+		database.Filter{"order_id": orderID})
+	if err != nil {
+		return err
+	}
+	_, err = deliverSrv.db.Update(ctx, "deliveries", database.Filter{"delivery_status": status},
+		database.Filter{"order_id": orderID})
+	return nil
+}
+
 func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
 	deliveryPersonID int64, orderID int64, deliveryStatus string) (bool, error) {
 	var orderInfo order.Order
@@ -18,6 +29,12 @@ func (deliverSrv *DeliveryService) OrderPlacement(ctx context.Context,
 
 	// Check the order is valid or not.
 	err := deliverSrv.db.Select(ctx, &orderInfo, "order_id", orderID)
+	if err != nil {
+		return false, err
+	}
+
+	// Perform generic validation.
+	_, err = deliverSrv.orderValidation(ctx, &orderInfo, deliveryPersonID)
 	if err != nil {
 		return false, err
 	}
