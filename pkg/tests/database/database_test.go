@@ -26,7 +26,8 @@ var (
 
 // Initialize the PostgreSQL container
 func setup() {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
 	pgContainer, err = postgres.Run(ctx, containerImage,
 		postgres.WithDatabase(dbName),

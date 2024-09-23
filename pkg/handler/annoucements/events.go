@@ -21,7 +21,7 @@ func (s *AnnouncementHandler) flashNews(c *gin.Context) {
 	c.Header("Cache-Control", "no-cache")
 	c.Header("Connection", "keep-alive")
 
-	ticker := time.NewTicker(10 * time.Second) // adjust timing
+	ticker := time.NewTicker(6 * time.Second) // adjust timing
 	defer ticker.Stop()
 
 	eventIndex := 0

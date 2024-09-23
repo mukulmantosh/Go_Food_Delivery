@@ -158,7 +158,7 @@ func (d *DB) HealthCheck() bool {
 
 	err := d.db.PingContext(ctx)
 	if err != nil {
-		slog.Error("DB::error", err)
+		slog.Error("DB::error", "error", err.Error())
 		return false
 	}
 	return true

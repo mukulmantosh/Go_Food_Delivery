@@ -27,7 +27,7 @@ func (usrSrv *UsrService) Login(_ context.Context, userID int64, Name string) (s
 func (usrSrv *UsrService) UserExist(ctx context.Context, email string, recordRequired bool) (bool, int64, string, error) {
 	count, err := usrSrv.db.Count(ctx, "users", "COUNT(*)", "email", email)
 	if err != nil {
-		slog.Info("UserService.UserExist::Error %v", err)
+		slog.Info("UserService.UserExist::Error %v", "error", err)
 		return false, 0, "", err
 	}
 	if count == 0 {
@@ -51,7 +51,7 @@ func (usrSrv *UsrService) ValidatePassword(ctx context.Context, userInput *user.
 	var userAccount user.User
 	err := usrSrv.db.Select(ctx, &userAccount, "email", userInput.Email)
 	if err != nil {
-		slog.Info("UserService.ValidatePassword::Error %v", err)
+		slog.Info("UserService.ValidatePassword::Error %v", "error", err)
 		return false, err
 	}
 

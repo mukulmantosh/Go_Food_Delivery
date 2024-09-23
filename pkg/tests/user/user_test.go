@@ -8,6 +8,7 @@ import (
 	"Go_Food_Delivery/pkg/tests"
 	"encoding/json"
 	"github.com/go-faker/faker/v4"
+	"github.com/go-playground/validator/v10"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -25,12 +26,12 @@ func TestAddUser(t *testing.T) {
 	AppEnv := os.Getenv("APP_ENV")
 	testServer := handler.NewServer(testDB)
 
-	// User
+	validate := validator.New()
 	userService := usr.NewUserService(testDB, AppEnv)
-	user.NewUserHandler(testServer, "/user", userService)
+	user.NewUserHandler(testServer, "/user", userService, validate)
 
 	type FakeUser struct {
-		User     string `json:"user" faker:"name"`
+		Name     string `json:"name" faker:"name"`
 		Email    string `json:"email" faker:"email"`
 		Password string `json:"password" faker:"password"`
 	}
@@ -54,7 +55,6 @@ func TestAddUser(t *testing.T) {
 		w := httptest.NewRecorder()
 		testServer.Gin.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusCreated, w.Code)
-
 	})
 
 	t.Run("User::Login", func(t *testing.T) {
