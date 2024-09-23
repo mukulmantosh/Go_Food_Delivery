@@ -45,7 +45,7 @@ func TestRestaurant(t *testing.T) {
 		State:       state,
 	}
 
-	body, contentType, err := generateData(form)
+	body, contentType, err := GenerateData(form)
 	if err != nil {
 		t.Fatalf("Error generating form-data: %v", err)
 	}

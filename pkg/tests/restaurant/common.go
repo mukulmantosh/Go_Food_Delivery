@@ -28,7 +28,7 @@ type MenuItem struct {
 	UpdatedAt    time.Time `json:"UpdatedAt"`
 }
 
-func generateData(restaurant FakeRestaurant) (*bytes.Buffer, string, error) {
+func GenerateData(restaurant FakeRestaurant) (*bytes.Buffer, string, error) {
 	var buffer bytes.Buffer
 	writer := multipart.NewWriter(&buffer)
 

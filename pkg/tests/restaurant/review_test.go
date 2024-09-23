@@ -113,8 +113,6 @@ func TestReview(t *testing.T) {
 	})
 
 	t.Run("Review::List", func(t *testing.T) {
-		//[{"review_id":1,"user_id":1,"restaurant_id":1,"Rating":4,"Comment":"itaque","CreatedAt":"2024-08-16T08:44:15Z","UpdatedAt":"2024-08-16T08:44:15Z"}]
-
 		type ReviewResponse struct {
 			ReviewID     int64  `json:"review_id"`
 			UserID       int64  `json:"user_id"`
