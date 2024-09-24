@@ -24,7 +24,7 @@ func TestAddUser(t *testing.T) {
 	t.Setenv("LOCAL_STORAGE_PATH", "./tmp")
 	testDB := tests.Setup()
 	AppEnv := os.Getenv("APP_ENV")
-	testServer := handler.NewServer(testDB)
+	testServer := handler.NewServer(testDB, false)
 
 	validate := validator.New()
 	userService := usr.NewUserService(testDB, AppEnv)

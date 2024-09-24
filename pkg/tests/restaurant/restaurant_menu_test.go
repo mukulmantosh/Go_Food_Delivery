@@ -23,7 +23,7 @@ func TestRestaurantMenu(t *testing.T) {
 	t.Setenv("LOCAL_STORAGE_PATH", "./tmp")
 	testDB := tests.Setup()
 	AppEnv := os.Getenv("APP_ENV")
-	testServer := handler.NewServer(testDB)
+	testServer := handler.NewServer(testDB, false)
 
 	// Restaurant
 	restaurantService := restro.NewRestaurantService(testDB, AppEnv)

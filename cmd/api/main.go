@@ -47,7 +47,7 @@ func main() {
 	// WebSocket Clients
 	wsClients := make(map[string]*websocket.Conn)
 
-	s := handler.NewServer(db)
+	s := handler.NewServer(db, true)
 
 	// Initialize Validator
 	validate := validator.New()

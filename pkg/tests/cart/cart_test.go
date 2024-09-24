@@ -42,7 +42,7 @@ func TestCart(t *testing.T) {
 
 	testDB := tests.Setup()
 	AppEnv := os.Getenv("APP_ENV")
-	testServer := handler.NewServer(testDB)
+	testServer := handler.NewServer(testDB, false)
 	validate := validator.New()
 
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(60*time.Second))

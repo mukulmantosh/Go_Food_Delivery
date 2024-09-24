@@ -33,7 +33,7 @@ func TestReview(t *testing.T) {
 	testDB := tests.Setup()
 	validate := validator.New()
 	AppEnv := os.Getenv("APP_ENV")
-	testServer := handler.NewServer(testDB)
+	testServer := handler.NewServer(testDB, false)
 	middlewares := []gin.HandlerFunc{middleware.AuthMiddleware()}
 
 	userService := usr.NewUserService(testDB, AppEnv)
