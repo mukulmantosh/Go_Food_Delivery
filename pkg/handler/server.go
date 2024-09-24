@@ -5,8 +5,6 @@ import (
 	"Go_Food_Delivery/pkg/storage"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	sloggin "github.com/samber/slog-gin"
-	"log/slog"
 	"os"
 )
 
@@ -17,7 +15,7 @@ type Server struct {
 }
 
 func NewServer(db database.Database) *Server {
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	//logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	ginEngine := gin.New()
 
@@ -30,7 +28,7 @@ func NewServer(db database.Database) *Server {
 	}
 
 	// Setting Logger, CORS & MultipartMemory
-	ginEngine.Use(sloggin.New(logger))
+	//ginEngine.Use(sloggin.New(logger))
 	ginEngine.Use(gin.Recovery())
 	ginEngine.Use(cors.New(corsConfig))
 	ginEngine.MaxMultipartMemory = 8 << 20 // 8 MB

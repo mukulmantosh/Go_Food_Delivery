@@ -125,8 +125,7 @@ func TestRestaurantMenu(t *testing.T) {
 	})
 
 	t.Run("RestaurantMenu::List", func(t *testing.T) {
-		url := fmt.Sprintf("%s%d", "/restaurant/menu/", RestaurantResponseID)
-		req, _ := http.NewRequest(http.MethodGet, url, nil)
+		req, _ := http.NewRequest(http.MethodGet, "/restaurant/menu", nil)
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 		testServer.Gin.ServeHTTP(w, req)

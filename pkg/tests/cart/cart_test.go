@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/nats"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -37,6 +38,8 @@ func TestCart(t *testing.T) {
 	t.Setenv("STORAGE_TYPE", "local")
 	t.Setenv("STORAGE_DIRECTORY", "uploads")
 	t.Setenv("LOCAL_STORAGE_PATH", "./tmp")
+	t.Setenv("GIN_MODE", "release")
+
 	testDB := tests.Setup()
 	AppEnv := os.Getenv("APP_ENV")
 	testServer := handler.NewServer(testDB)
@@ -135,7 +138,7 @@ func TestCart(t *testing.T) {
 
 	Token := fmt.Sprintf("Bearer %s", loginToken)
 
-	t.Run("Restaurant::Create", func(t *testing.T) {
+	t.Run("Cart::Restaurant::Create", func(t *testing.T) {
 
 		req, _ := http.NewRequest(http.MethodPost, "/restaurant/", body)
 		req.Header.Set("Content-Type", contentType)
@@ -145,7 +148,7 @@ func TestCart(t *testing.T) {
 
 	})
 
-	t.Run("Restaurant::Listing", func(t *testing.T) {
+	t.Run("Cart::Restaurant::Listing", func(t *testing.T) {
 
 		type RestaurantResponse struct {
 			RestaurantID int64  `json:"restaurant_id"`
@@ -167,7 +170,7 @@ func TestCart(t *testing.T) {
 		assert.Equal(t, http.StatusOK, w.Code)
 
 		var restaurants []RestaurantResponse
-		err := json.Unmarshal(w.Body.Bytes(), &restaurants)
+		err := json.NewDecoder(strings.NewReader(w.Body.String())).Decode(&restaurants)
 		if err != nil {
 			t.Fatalf("Failed to decode response body: %v", err)
 		}
@@ -177,7 +180,7 @@ func TestCart(t *testing.T) {
 
 	})
 
-	t.Run("RestaurantMenu::Create", func(t *testing.T) {
+	t.Run("Cart::RestaurantMenu::Create", func(t *testing.T) {
 		var customMenu FakeRestaurantMenu
 
 		customMenu.Available = true
@@ -198,13 +201,11 @@ func TestCart(t *testing.T) {
 
 	})
 
-	t.Run("RestaurantMenu::List", func(t *testing.T) {
-		url := fmt.Sprintf("%s%d", "/restaurant/menu/", RestaurantResponseID)
-		req, _ := http.NewRequest(http.MethodGet, url, nil)
+	t.Run("Cart::RestaurantMenu::List", func(t *testing.T) {
+		req, _ := http.NewRequest(http.MethodGet, "/restaurant/menu", nil)
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 		testServer.Gin.ServeHTTP(w, req)
-
 		var menuItems []restroTypes.MenuItem
 		err := json.Unmarshal(w.Body.Bytes(), &menuItems)
 		if err != nil {
@@ -241,8 +242,4 @@ func TestCart(t *testing.T) {
 	t.Cleanup(func() {
 		tests.Teardown(testDB)
 	})
-	t.Cleanup(func() {
-		//tests.RemoveNATSContainer(containerID)
-	})
-
 }
