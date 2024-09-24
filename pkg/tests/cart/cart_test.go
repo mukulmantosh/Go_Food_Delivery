@@ -232,9 +232,31 @@ func TestCart(t *testing.T) {
 		req.Header.Set("Content-Type", "application/json")
 		req.Header.Set("Authorization", Token)
 		w := httptest.NewRecorder()
-		fmt.Println(w.Body.String())
-
 		testServer.Gin.ServeHTTP(w, req)
+		assert.Equal(t, http.StatusCreated, w.Code)
+
+	})
+
+	t.Run("Cart::List", func(t *testing.T) {
+		req, _ := http.NewRequest(http.MethodGet, "/cart/list", nil)
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", Token)
+
+		w := httptest.NewRecorder()
+		testServer.Gin.ServeHTTP(w, req)
+		t.Log(w.Body.String())
+		assert.Equal(t, http.StatusOK, w.Code)
+
+	})
+
+	t.Run("Cart::PlaceOrder", func(t *testing.T) {
+		req, _ := http.NewRequest(http.MethodPost, "/cart/order/new", nil)
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", Token)
+
+		w := httptest.NewRecorder()
+		testServer.Gin.ServeHTTP(w, req)
+		t.Log(w.Body.String())
 		assert.Equal(t, http.StatusCreated, w.Code)
 
 	})
