@@ -73,7 +73,7 @@ func TestCart(t *testing.T) {
 	restaurant.NewRestaurantHandler(testServer, "/restaurant", restaurantService)
 
 	// Cart
-	cartService := cart_order.NewCartService(testDB, AppEnv, (*natsPkg.NATS)(natTestServer))
+	cartService := cart_order.NewCartService(testDB, AppEnv, natTestServer)
 	crt.NewCartHandler(testServer, "/cart", cartService, middlewares, validate)
 
 	var RestaurantResponseID int64
