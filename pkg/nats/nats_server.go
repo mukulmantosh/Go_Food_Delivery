@@ -12,8 +12,8 @@ type NATS struct {
 	Conn *nats.Conn
 }
 
-func NewNATS() (*NATS, error) {
-	nc, err := nats.Connect(nats.DefaultURL, nats.Name("food-delivery-nats"))
+func NewNATS(url string) (*NATS, error) {
+	nc, err := nats.Connect(url, nats.Name("food-delivery-nats"))
 	if err != nil {
 		log.Fatalf("Error connecting to NATS:: %s", err)
 	}

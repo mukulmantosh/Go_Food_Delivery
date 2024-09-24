@@ -42,7 +42,7 @@ func main() {
 	}
 
 	// Connect NATS
-	natServer, err := nats.NewNATS()
+	natServer, err := nats.NewNATS("nats://127.0.0.1:4222")
 
 	// WebSocket Clients
 	wsClients := make(map[string]*websocket.Conn)

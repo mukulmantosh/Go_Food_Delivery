@@ -18,31 +18,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-faker/faker/v4"
 	"github.com/go-playground/validator/v10"
-	"github.com/nats-io/nats.go"
 	"github.com/stretchr/testify/assert"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
 )
-
-type TestNATS struct {
-	Conn *nats.Conn
-}
-
-func NewTestNATS(url string) (*TestNATS, error) {
-	nc, err := nats.Connect(url, nats.Name("food-delivery-test-nats"))
-	if err != nil {
-		log.Fatalf("Error connecting to NATS:: %s", err)
-	}
-	return &TestNATS{Conn: nc}, err
-}
 
 func TestCart(t *testing.T) {
 	t.Setenv("APP_ENV", "TEST")
@@ -54,41 +40,18 @@ func TestCart(t *testing.T) {
 	testServer := handler.NewServer(testDB)
 	validate := validator.New()
 
-	ctx := context.Background()
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(60*time.Second))
+	defer cancel()
 
-	// Define NATS container request
-	req := testcontainers.ContainerRequest{
-		Image:        "nats:2.10.20",
-		ExposedPorts: []string{"4222/tcp"},
-		WaitingFor:   wait.ForListeningPort("4222/tcp"),
-	}
+	containerID := tests.CreateNATSContainer(ctx)
 
-	// NATS container
-	natsContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: req,
-		Started:          true,
-	})
-	if err != nil {
-		log.Fatalf("failed to start container: %v", err)
-	}
-	defer func() {
-		_ = natsContainer.Terminate(ctx)
-	}()
+	t.Logf("Container %s is running\n", containerID)
 
-	host, err := natsContainer.Host(ctx)
-	if err != nil {
-		log.Fatalf("failed to get host: %v", err)
-	}
-
-	port, err := natsContainer.MappedPort(ctx, "4222")
-	if err != nil {
-		log.Fatalf("failed to get mapped port: %v", err)
-	}
-	natsURL := fmt.Sprintf("nats://%s:%s", host, port.Port())
+	// Since we're using host networking, we can directly use the localhost
+	natsURL := "nats://0.0.0.0:4222"
 
 	// Connect NATS
-	natTestServer, err := NewTestNATS(natsURL)
-
+	natTestServer, err := natsPkg.NewNATS(natsURL)
 	middlewares := []gin.HandlerFunc{middleware.AuthMiddleware()}
 
 	// User
@@ -268,7 +231,11 @@ func TestCart(t *testing.T) {
 
 	})
 
-	// Cleanup
-	tests.Teardown(testDB)
+	t.Cleanup(func() {
+		tests.Teardown(testDB)
+	})
+	t.Cleanup(func() {
+		tests.RemoveNATSContainer(containerID)
+	})
 
 }
