@@ -15,7 +15,7 @@ import (
 
 var (
 	pgContainer    testcontainers.Container
-	containerImage string = "postgres:16.3-alpine"
+	containerImage string = "postgres:16.3"
 	dbHost         string
 	dbPort         string
 	dbName         string = "test-db"
@@ -26,7 +26,7 @@ var (
 
 // Initialize the PostgreSQL container
 func setup() {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
 	pgContainer, err = postgres.Run(ctx, containerImage,
