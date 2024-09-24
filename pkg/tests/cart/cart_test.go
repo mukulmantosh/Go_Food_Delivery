@@ -18,6 +18,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/modules/nats"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -43,15 +45,20 @@ func TestCart(t *testing.T) {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(60*time.Second))
 	defer cancel()
 
-	containerID := tests.CreateNATSContainer(ctx)
+	natsContainer, err := nats.Run(ctx, "nats:2.10.20", testcontainers.WithHostPortAccess(4222))
 
-	t.Logf("Container %s is running\n", containerID)
-
-	// Since we're using host networking, we can directly use the localhost
-	natsURL := "nats://0.0.0.0:4222"
+	if err != nil {
+		t.Logf("failed to start NATS container: %s", err)
+		return
+	}
+	connectionString, err := natsContainer.ConnectionString(ctx)
+	if err != nil {
+		t.Log("NATS Connection String Error::", err)
+		return
+	}
 
 	// Connect NATS
-	natTestServer, err := natsPkg.NewNATS(natsURL)
+	natTestServer, err := natsPkg.NewNATS(connectionString)
 	middlewares := []gin.HandlerFunc{middleware.AuthMiddleware()}
 
 	// User
@@ -235,7 +242,7 @@ func TestCart(t *testing.T) {
 		tests.Teardown(testDB)
 	})
 	t.Cleanup(func() {
-		tests.RemoveNATSContainer(containerID)
+		//tests.RemoveNATSContainer(containerID)
 	})
 
 }
