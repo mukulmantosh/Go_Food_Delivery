@@ -244,7 +244,6 @@ func TestCart(t *testing.T) {
 
 		w := httptest.NewRecorder()
 		testServer.Gin.ServeHTTP(w, req)
-		t.Log(w.Body.String())
 		assert.Equal(t, http.StatusOK, w.Code)
 
 	})
@@ -256,7 +255,6 @@ func TestCart(t *testing.T) {
 
 		w := httptest.NewRecorder()
 		testServer.Gin.ServeHTTP(w, req)
-		t.Log(w.Body.String())
 		assert.Equal(t, http.StatusCreated, w.Code)
 
 	})

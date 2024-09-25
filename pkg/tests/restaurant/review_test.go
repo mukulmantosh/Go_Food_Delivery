@@ -147,6 +147,8 @@ func TestReview(t *testing.T) {
 		assert.Equal(t, http.StatusNoContent, w.Code)
 	})
 
-	tests.Teardown(testDB)
+	t.Cleanup(func() {
+		tests.Teardown(testDB)
+	})
 
 }

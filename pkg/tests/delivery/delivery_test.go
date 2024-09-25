@@ -13,6 +13,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/pquerna/otp/totp"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/nats"
@@ -24,7 +25,7 @@ import (
 	"time"
 )
 
-func TestAddDeliveryUser(t *testing.T) {
+func TestDeliveryUser(t *testing.T) {
 	t.Setenv("APP_ENV", "TEST")
 	t.Setenv("STORAGE_TYPE", "local")
 	t.Setenv("STORAGE_DIRECTORY", "uploads")
@@ -65,25 +66,37 @@ func TestAddDeliveryUser(t *testing.T) {
 		VehicleDetails string `json:"vehicle_details"`
 	}
 
+	var customUser FakeDeliveryUser
+	customUser.Name = "Test"
+	customUser.Phone = "08090909090"
+	customUser.VehicleDetails = "OX-25895-8547"
+
 	t.Run("Delivery::User::Create", func(t *testing.T) {
 
-		var customUser FakeDeliveryUser
-		customUser.Name = "Test"
-		customUser.Phone = "08090909090"
-		customUser.VehicleDetails = "OX-25895-8547"
 		payload, err := json.Marshal(&customUser)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		t.Log(string(payload))
-
 		req, _ := http.NewRequest(http.MethodPost, "/delivery/add", strings.NewReader(string(payload)))
 		req.Header.Set("Content-Type", "application/json")
 		w := httptest.NewRecorder()
 		testServer.Gin.ServeHTTP(w, req)
-		t.Log(w.Body.String())
 		assert.Equal(t, http.StatusCreated, w.Code)
+	})
+
+	t.Run("Delivery::User::TOTP", func(t *testing.T) {
+		secret, _, err := deliveryService.GenerateTOTP(ctx, customUser.Phone)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		otp, err := totp.GenerateCode(secret, time.Now())
+		if err != nil {
+			t.Fatal(err)
+		}
+		assert.True(t, deliveryService.ValidateOTP(ctx, secret, otp), true)
+
 	})
 
 }

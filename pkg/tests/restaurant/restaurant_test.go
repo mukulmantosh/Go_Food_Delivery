@@ -101,6 +101,8 @@ func TestRestaurant(t *testing.T) {
 	})
 
 	// Cleanup
-	tests.Teardown(testDB)
+	t.Cleanup(func() {
+		tests.Teardown(testDB)
+	})
 
 }

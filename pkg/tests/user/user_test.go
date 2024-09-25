@@ -72,6 +72,8 @@ func TestAddUser(t *testing.T) {
 
 	})
 
-	tests.Teardown(testDB)
+	t.Cleanup(func() {
+		tests.Teardown(testDB)
+	})
 
 }
