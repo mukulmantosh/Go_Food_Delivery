@@ -124,6 +124,14 @@ func TestDeliveryUser(t *testing.T) {
 
 	})
 
+	t.Run("Delivery::User::ValidateAccount", func(t *testing.T) {
+		deliveryPersonDetail, err := deliveryService.ValidateAccountDetails(ctx, customUser.Phone)
+		if err != nil {
+			t.Fatal(err)
+		}
+		assert.Equal(t, customUser.Name, deliveryPersonDetail.Name)
+	})
+
 }
 
 func TestDeliveryGenerateJWT(t *testing.T) {
