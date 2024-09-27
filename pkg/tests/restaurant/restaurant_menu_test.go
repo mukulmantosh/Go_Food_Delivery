@@ -143,6 +143,15 @@ func TestRestaurantMenu(t *testing.T) {
 
 	})
 
+	t.Run("RestaurantMenu::List::ById", func(t *testing.T) {
+		url := fmt.Sprintf("%s%d", "/restaurant/menu?restaurant_id=", RestaurantMenuID)
+		req, _ := http.NewRequest(http.MethodGet, url, nil)
+		req.Header.Set("Content-Type", "application/json")
+		w := httptest.NewRecorder()
+		testServer.Gin.ServeHTTP(w, req)
+		assert.Equal(t, http.StatusOK, w.Code)
+	})
+
 	t.Run("RestaurantMenu::Delete", func(t *testing.T) {
 		url := fmt.Sprintf("%s%d/%d", "/restaurant/menu/", RestaurantResponseID, RestaurantMenuID)
 		req, _ := http.NewRequest(http.MethodDelete, url, nil)
