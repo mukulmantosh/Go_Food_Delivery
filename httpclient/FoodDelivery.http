@@ -1,0 +1,207 @@
+# FoodDelivery
+@HTTP_URL = http://localhost:8080
+@USER_TOKEN = "************"
+@DELIVERY_PERSON_TOKEN = "**************"
+
+###
+# group: User
+# @name Create a new User
+POST {{HTTP_URL}}/user/
+Content-Type: application/json
+
+{
+  "name": "sample1",
+  "email": "sample@yahoo.com",
+  "password": "sample123"
+}
+
+
+###
+# group: User
+# @name Delete User
+DELETE {{HTTP_URL}}/user/15
+
+###
+# group: User
+# @name Login User
+POST {{HTTP_URL}}/user/login
+Content-Type: application/json
+
+{
+  "email": "sample@yahoo.com",
+  "password": "sample123"
+}
+
+
+###
+# group: Restaurant
+# @name Create a new Restaurant
+POST {{HTTP_URL}}/restaurant
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name"
+
+Starbucks (Park Row at Beekman St)
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+
+Starbucks (Park Row at Beekman St) in the City Hall area of Manhattan is a popular destination for coffee and tea enthusiasts. This location offers a variety of cold and hot beverages, including Iced Caffè Latte, Starbucks® Cold Brew Coffee, and Cappuccino, which are especially favored by patrons. Visitors also enjoy a range of Frappuccino® blended beverages and have a selection of bakery items and lunch options to choose from. Commonly ordered together are the Featured Medium Roast Pike Place® Roast and Starbucks® Cold Brew Coffee. The establishment holds a customer rating of 4.2, making it a well-regarded spot in its neighborhood.
+--WebAppBoundary
+Content-Disposition: form-data; name="address"
+
+38 Park Row
+--WebAppBoundary
+Content-Disposition: form-data; name="city"
+
+New York
+--WebAppBoundary
+Content-Disposition: form-data; name="state"
+
+NY
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="starbucks.jpg"
+
+< /C:/Users/win10/Downloads/starbucks.jpg
+--WebAppBoundary
+
+###
+# group: Restaurant
+# @name Create Menu Item
+POST {{HTTP_URL}}/restaurant/menu
+Content-Type: application/json
+
+{
+  "restaurant_id": 1,
+  "name": "Caffe Americano",
+  "description": "Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup with depth and nuance.",
+  "price": 5.25,
+  "category": "BEVERAGES",
+  "available": true
+}
+
+###
+# group: Restaurant
+# @name List Menus
+GET {{HTTP_URL}}/restaurant/menu
+
+###
+# group: Restaurant
+# @name List all restaurants
+GET {{HTTP_URL}}/restaurant
+
+###
+# group: Restaurant
+# @name List restaurant by ID
+GET {{HTTP_URL}}/restaurant/1
+
+###
+# group: Restaurant
+# @name Delete Restaurant
+DELETE {{HTTP_URL}}/restaurant/1
+
+###
+# group: Restaurant
+# @name Delete Menu
+DELETE {{HTTP_URL}}/restaurant/menu/2/4
+
+###
+# group: Reviews
+# @name New Review
+POST {{HTTP_URL}}/review/1
+Authorization: Bearer {{USER_TOKEN}}
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "cool!"
+}
+
+###
+# group: Reviews
+# @name List Reviews
+GET {{HTTP_URL}}/review/1
+Authorization: Bearer {{USER_TOKEN}}
+
+###
+# group: Reviews
+# @name Delete Review
+DELETE {{HTTP_URL}}/review/2
+Authorization: Bearer {{USER_TOKEN}}
+
+###
+# group: Cart
+# @name Add Item to Cart
+POST {{HTTP_URL}}/cart/add
+Authorization: Bearer {{USER_TOKEN}}
+Content-Type: application/json
+
+{
+  "item_id": 1,
+  "restaurant_id": 1,
+  "quantity": 1
+}
+
+###
+# group: Cart
+# @name Lists Cart Items
+GET {{HTTP_URL}}/cart/list
+Authorization: Bearer {{USER_TOKEN}}
+
+###
+# group: Cart
+# @name Remove Item from Cart
+DELETE {{HTTP_URL}}/cart/remove/2
+Authorization: Bearer {{USER_TOKEN}}
+
+###
+# group: Cart
+# @name Place a new order
+POST {{HTTP_URL}}/cart/order/new
+Authorization: Bearer {{USER_TOKEN}}
+
+###
+# group: DeliveryPerson
+# @name Add a new delivery person
+POST {{HTTP_URL}}/delivery/add
+Content-Type: application/json
+
+{
+  "name": "John Wick",
+  "phone": "78784512458",
+  "vehicle_details": "OX-25895-8547"
+}
+
+###
+# group: DeliveryPerson
+# @name Login as DeliveryPerson
+POST {{HTTP_URL}}/delivery/login
+Content-Type: application/json
+
+{
+  "phone": "78784512458",
+  "otp": "614550"
+}
+
+###
+# group: DeliveryPerson
+# @name Get all delivery order lists
+GET {{HTTP_URL}}/delivery/deliveries/87
+Authorization: Bearer {{DELIVERY_PERSON_TOKEN}}
+
+###
+# group: DeliveryPerson
+# @name Update Order Status
+POST {{HTTP_URL}}/delivery/update-order
+Authorization: Bearer {{DELIVERY_PERSON_TOKEN}}
+Content-Type: application/json
+
+{
+  "order_id": 108,
+  "status": "on_the_way"
+}
+
+###
+# group: Announcements
+# @name Flash Events
+GET {{HTTP_URL}}/announcements/events

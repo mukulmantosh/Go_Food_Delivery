@@ -1,0 +1,639 @@
+{
+	"info": {
+		"_postman_id": "270f76d7-6a0e-4b12-ac79-c5951b3d2fca",
+		"name": "FoodDelivery",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5196778"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create a new User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"sample1\",\r\n    \"email\": \"sample@yahoo.com\",\r\n    \"password\": \"sample123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HTTP_URL}}/user/",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{HTTP_URL}}/user/15",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"user",
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"sample@yahoo.com\",\r\n    \"password\": \"sample123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HTTP_URL}}/user/login",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Restaurant",
+			"item": [
+				{
+					"name": "Create a new Restaurant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Starbucks (Park Row at Beekman St)",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Starbucks (Park Row at Beekman St) in the City Hall area of Manhattan is a popular destination for coffee and tea enthusiasts. This location offers a variety of cold and hot beverages, including Iced Caffè Latte, Starbucks® Cold Brew Coffee, and Cappuccino, which are especially favored by patrons. Visitors also enjoy a range of Frappuccino® blended beverages and have a selection of bakery items and lunch options to choose from. Commonly ordered together are the Featured Medium Roast Pike Place® Roast and Starbucks® Cold Brew Coffee. The establishment holds a customer rating of 4.2, making it a well-regarded spot in its neighborhood.",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "38 Park Row",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "New York",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "NY",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/win10/Downloads/starbucks.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HTTP_URL}}/restaurant",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"restaurant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Menu Item",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"restaurant_id\": 1,\r\n    \"name\": \"Caffe Americano\",\r\n    \"description\": \"Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup with depth and nuance.\",\r\n    \"price\": 5.25,\r\n    \"category\": \"BEVERAGES\",\r\n    \"available\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HTTP_URL}}/restaurant/menu",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"restaurant",
+								"menu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Menus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HTTP_URL}}/restaurant/menu",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"restaurant",
+								"menu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List all restaurants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HTTP_URL}}/restaurant",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"restaurant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List restaurant by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HTTP_URL}}/restaurant/1",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"restaurant",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Restaurant",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{HTTP_URL}}/restaurant/1",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"restaurant",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Menu",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{HTTP_URL}}/restaurant/menu/2/4",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"restaurant",
+								"menu",
+								"2",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reviews",
+			"item": [
+				{
+					"name": "New Review",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpc3MiOiJHb19Gb29kX0RlbGl2ZXJ5IiwiZXhwIjoxNzIzNTQ3NDI4fQ.q45k3qv3gfBV2Rm-5SODYFgCnmF74oJIpDza2mVPJhM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rating\": 4,\r\n    \"comment\": \"cool!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HTTP_URL}}/review/1",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"review",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Reviews",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpc3MiOiJHb19Gb29kX0RlbGl2ZXJ5IiwiZXhwIjoxNzIzNTQ3NDI4fQ.q45k3qv3gfBV2Rm-5SODYFgCnmF74oJIpDza2mVPJhM",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HTTP_URL}}/review/1",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"review",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Review",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpc3MiOiJHb19Gb29kX0RlbGl2ZXJ5IiwiZXhwIjoxNzIzODAxMjYwfQ.Lv42GA5zYKbJGIbwsVQtXiNssjDPfoP3ni1QPzTBu-M",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HTTP_URL}}/review/2",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"review",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Add Item to Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"item_id\":1,\r\n    \"restaurant_id\":1,\r\n    \"quantity\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HTTP_URL}}/cart/add",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"cart",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lists Cart Items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HTTP_URL}}/cart/list",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"cart",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Item from Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HTTP_URL}}/cart/remove/2",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"cart",
+								"remove",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Place a new order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HTTP_URL}}/cart/order/new",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"cart",
+								"order",
+								"new"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DeliveryPerson",
+			"item": [
+				{
+					"name": "Add a new delivery person",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"John Wick\",\r\n    \"phone\": \"78784512458\",\r\n    \"vehicle_details\": \"OX-25895-8547\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HTTP_URL}}/delivery/add",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"delivery",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as DeliveryPerson",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"78784512458\",\r\n    \"otp\": \"614550\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HTTP_URL}}/delivery/login",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"delivery",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all delivery order lists",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{DELIVERY_PERSON_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HTTP_URL}}/delivery/deliveries/87",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"delivery",
+								"deliveries",
+								"87"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJuYW1lIjoiSm9obiBXaWNrIiwiaXNzIjoiR29fRm9vZF9EZWxpdmVyeSIsImV4cCI6MTcyNjgzMjgwOH0.AhbVmNiNqU6x8VMSW-yZT0j_kP9F2MTKcSvfkqxCbZ0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order_id\": 108,\r\n    \"status\": \"on_the_way\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HTTP_URL}}/delivery/update-order",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"delivery",
+								"update-order"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Announcements",
+			"item": [
+				{
+					"name": "Flash Events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HTTP_URL}}/announcements/events",
+							"host": [
+								"{{HTTP_URL}}"
+							],
+							"path": [
+								"announcements",
+								"events"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "HTTP_URL",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "TOKEN",
+			"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJuYW1lIjoic2FtcGxlMSIsImlzcyI6IkdvX0Zvb2RfRGVsaXZlcnkiLCJleHAiOjE3MjY1NzQ1NzZ9.xMOzKrCWQl4Gidq8m_lu2eTTRgSn-Ax2Jfc5GiXMoNY",
+			"type": "string"
+		},
+		{
+			"key": "DELIVERY_PERSON_TOKEN",
+			"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJuYW1lIjoiSm9obiBXaWNrIiwiaXNzIjoiR29fRm9vZF9EZWxpdmVyeSIsImV4cCI6MTcyNjgzMjgwOH0.AhbVmNiNqU6x8VMSW-yZT0j_kP9F2MTKcSvfkqxCbZ0",
+			"type": "string"
+		}
+	]
+}
