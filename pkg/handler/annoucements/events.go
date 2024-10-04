@@ -21,7 +21,7 @@ func (s *AnnouncementHandler) flashNews(c *gin.Context) {
 	c.Header("Cache-Control", "no-cache")
 	c.Header("Connection", "keep-alive")
 
-	ticker := time.NewTicker(6 * time.Second) // adjust timing
+	ticker := time.NewTicker(6 * time.Second)
 	defer ticker.Stop()
 
 	eventIndex := 0
@@ -37,7 +37,8 @@ func (s *AnnouncementHandler) flashNews(c *gin.Context) {
 			// Move to the next event
 			eventIndex = (eventIndex + 1) % len(*events)
 		case <-c.Request.Context().Done():
-			return // Exit if the client disconnects
+			ticker.Stop()
+			return
 		}
 	}
 
