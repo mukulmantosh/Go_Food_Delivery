@@ -55,13 +55,10 @@ JWT_SECRET_KEY=********************
 PASSWORD_SALT=********************
 ```
 
-#### External APIs
+### External APIs
 
 We are using [UnSplash](https://unsplash.com/) to generate images. So, you need to have an API key to work with the application. 
 
-Once you’re ready, clone this repository in [GoLand,](https://www.jetbrains.com/go/) and you're good to go.
-
-![go_run_config](./misc/images/go_run_config.png)
 
 ### Frontend (UI)
 
@@ -69,3 +66,15 @@ To configure the application's frontend UI, be sure to follow the instructions i
 
 
 [repo]: https://github.com/mukulmantosh/food_delivery_frontend
+
+### HTTP Client
+
+We have covered the APIs which you can directly test out from the IDE. 
+
+![httpclient](./misc/images/httpclient.png)
+
+### Get Set Go 🚀
+
+Once you’re ready, clone this repo in [GoLand,](https://www.jetbrains.com/go/) and you're good to go.
+
+![go_run_config](./misc/images/go_run_config.png)
