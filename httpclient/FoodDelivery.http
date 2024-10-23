@@ -124,9 +124,10 @@ GET {{HTTP_URL}}/review/1
 Authorization: Bearer {{USER_TOKEN}}
 
 ###
+@REVIEW_ID = 1
 # group: Reviews
 # @name Delete Review
-DELETE {{HTTP_URL}}/review/2
+DELETE {{HTTP_URL}}/review/{{REVIEW_ID}}
 Authorization: Bearer {{USER_TOKEN}}
 
 ###
@@ -175,6 +176,11 @@ Content-Type: application/json
 ###
 # group: DeliveryPerson
 # @name Login as DeliveryPerson
+
+# To generate an OTP, check the delivery_person table
+# for the auth_key column. You'll need to register this key
+# in Google Authenticator to create the OTP.
+
 POST {{HTTP_URL}}/delivery/login
 Content-Type: application/json
 
