@@ -12,7 +12,7 @@ Before starting up this project, make sure you have the necessary dependencies i
 
 ###  Installation
 
-- [x] [Go](https://go.dev/) - Go is an open source programming language that makes it simple to build secure, scalable systems.
+- [x] [Go](https://go.dev/) - Go is an open-source programming language that makes it simple to build secure, scalable systems.
 
 - [x] [Docker](https://www.docker.com/) - Docker helps developers bring their ideas to life by conquering the complexity of app development.
 
@@ -69,7 +69,7 @@ To configure the application's frontend UI, be sure to follow the instructions i
 
 ### HTTP Client
 
-We have covered the APIs which you can directly test out from the IDE. 
+We have covered the APIs, which you can directly test out from the IDE. 
 
 ![httpclient](./misc/images/httpclient.png)
 
